@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <title>556玩小说网</title>
+    <meta name="keywords" content="雪中悍刀行,修罗天帝,修罗丹帝">
+    <meta name="description" content="烽火戏诸侯">
+    
+    <link rel="stylesheet" href="/book/src/fonts/iconfont.css" />
+    <link rel="stylesheet" href="/book/src/css/style.min.css" />
+    <link rel="stylesheet" href="/book/src/css/swiper.min.css" />
+    <script src="/book/src/js/loading.js"></script>
+    <style>
+      .scroll {
+            width: 100%;
+            display: inline;
+            white-space: nowrap;
+            overflow-x:scroll;
+            float:left;
+            overflow-y:hidden
+      }
+      .scroll-item {
+        display:inline-block;
+        margin-left: 10px;
+        margin-right: 10px;
+        width:30%;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header flex flex-vc">
+      <div class="l">
+        <a href="/book/index.html"><i class="icon-zhuye1"></i></a>
+      </div>
+      <div class="c box-flex-1 text-center"><h1>556玩小说网</h1></div>
+      <div class="r text-right">
+        <a href="/book/src/user-center.html"><i class="icon-zhuye"></i></a>
+      </div>
+    </header>
+    <!--导航-->
+    <div class="banner">
+      <div class="swiper-container">
+        <!--banner图懒加载 data.src-->
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <img
+              data-src="/book/src/images/banner1.png"
+              alt=""
+              class="img-bespread swiper-lazy"
+            />
+            <div class="swiper-lazy-preloader"></div>
+          </div>
+          <div class="swiper-slide">
+            <img
+              data-src="/book/src/images/banner2.png"
+              alt=""
+              class="img-bespread swiper-lazy"
+            />
+            <div class="swiper-lazy-preloader"></div>
+          </div>
+          <div class="swiper-slide">
+            <img
+              data-src="/book/src/images/banner3.png"
+              alt=""
+              class="img-bespread swiper-lazy"
+            />
+            <div class="swiper-lazy-preloader"></div>
+          </div>
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+    <div class="nav-box section">
+      <nav>
+        <ul class="flex flex-vc none text-center color-white fz16rem">
+          <li class="box-flex-1">
+            <a href="/book/index.html">
+              <div class="nav-div home"><i class="icon icon-zhuye1"></i></div>
+              <span>首页</span>
+            </a>
+          </li>
+          <li class="box-flex-1">
+            <a href="/book/src/recharge.html">
+              <div class="nav-div cz fz22rem">
+                <i class="icon icon-qianbao1 fz22rem"></i>
+              </div>
+              <span>充值</span>
+            </a>
+          </li>
+          <li class="box-flex-1">
+            <a href="/book/src/bookshelf.html">
+              <div class="nav-div sj"><i class="icon icon-yuedu1"></i></div>
+              <span>书架</span>
+            </a>
+          </li>
+          <li class="box-flex-1">
+            <a href="/book/src/bookzoom.html?page=1&cate_id=0&words=0&name=">
+              <div class="nav-div sk"><i class="icon icon-yuedu"></i></div>
+              <span>书库</span>
+            </a>
+          </li>
+          <li class="box-flex-1">
+            <a href="/book/src/search.html">
+              <div class="nav-div ss"><i class="icon icon-chakan"></i></div>
+              <span>搜索</span>
+            </a>
+          </li>
+          >
+        </ul>
+      </nav>
+    </div>
+    <!--限时免费-->
+    <div class="public-title section mt1rem">
+      <h2 class="none fz16rem">限时免费</h2>
+    </div>
+    <div class="section apps-free recharge-col">
+      <ul class="flex none text-center scroll" id="free"></ul>
+    </div>
+    <div class="public-title section mt1rem">
+      <h2 class="none fz16rem">最热作品</h2>
+    </div>
+    <div class="section apps-free recharge-col">
+      <ul class="flex none text-center scroll" id="hot"></ul>
+      <!--推荐-->
+      <div class="clearfix recommend-title">
+        <ul class="none" id="hot-recommend"></ul>
+      </div>
+    </div>
+    <div class="public-title section mt1rem">
+      <h2 class="none fz16rem">最新推荐</h2>
+    </div>
+    <div class="section apps-free recharge-col">
+      <ul class="flex none text-center scroll" id="new-recommend"></ul>
+      <!--推荐-->
+      <div class="clearfix recommend-title">
+        <ul class="none" id="recommend-recommend"></ul>
+      </div>
+    </div>
+    <!--推荐书籍-->
+    <div class="recommend mt1rem">
+      <ul class="none" id="more"></ul>
+      <p id="more-chapter" style="margin-left:48%"><button id="more-btn" color="blue !important">更多</button></p>
+    </div>
+
+    <footer class="footer">
+      <ul class="none">
+        <li class=""><a href="/book/src/user-center.html">登录</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/index.html">首页</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/src/recharge.html">充值</a></li>
+      </ul>
+      <p class="none">
+        <a href="http://beian.miit.gov.cn/">黔ICP备2022002579号</a>
+      </p>
+      <!-- <p class="none">客服QQ：123435666</p> -->
+    </footer>
+  </body>
+  <script src="/book/src/js/jquery.min.js"></script>
+  <script src="/book/src/js/script.js"></script>
+  <script src="/book/src/js/swiper.min.js"></script>
+  <script>
+    var page = 2;
+    var page_size = 5;
+    $(function () {
+      var mySwiper = new Swiper(".swiper-container", {
+        autoplay: 4000,
+        pagination: ".swiper-pagination",
+        paginationClickable: true,
+        lazyLoading: true,
+      });
+    });
+    $("#more-chapter").on("click", function(){
+      $("#more-btn").attr("disabled", "disabled");
+      $.ajax({
+      url: "http://www.556wan.cn/novel/index",
+      type:"POST",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({
+      "reqs":[
+        {"page":page,"size":page_size,"cate_id":5,"n_type":"more"},
+      ]
+    }),
+    success: function (res,status) {
+      $("#more-btn").attr("disabled", null);
+      if (res.code == 0) {
+        if (res.data.more == null){
+          return;
+        }
+        page += 1;
+        var str = $("#more").html();
+        $.each(res.data.more, function (i, novel) {
+          str +=
+            '<a href="/book/src/book-detail.html?novel_id=' +
+            novel.novel_id +
+            '">';
+          str += '<li class="section flex mt1rem recharge-col">';
+          str += "<div class=recommend-img>";
+          str += '<img src="' + novel.img + '" alt="loading.."></div>';
+          str += '<div class="box-flex-1">';
+          str += '<h4 class="none">' + novel.name + "</h4>";
+          str += '<p class="fz14rem line-limit-length">' + novel.intro + "</p>";
+          str += "</div></li>";
+          str += "</a>";
+        });
+        $("#more").html(str);
+      }
+    },
+    });
+    })
+    $.ajax({
+      url: "http://www.556wan.cn/novel/index",
+      type:"POST",
+      contentType: "application/json",
+      dataType: "json",
+      data: JSON.stringify({
+      "reqs":[
+        {"page":1,"size":10,"cate_id":1,"n_type":"free"},
+        {"page":1,"size":10,"cate_id":2,"n_type":"hot"},
+        {"page":1,"size":10,"cate_id":3,"n_type":"newr"},
+        {"page":1,"size":2,"cate_id":4,"n_type":"hotr"},
+        {"page":2,"size":2,"cate_id":4,"n_type":"recr"},
+        {"page":1,"size":5,"cate_id":5,"n_type":"more"},
+      ]
+    }),
+    success: function (res,status) {
+      if (res.code == 0) {
+        var str = "";
+        if (JSON.stringify(res.data) == "{}") {
+          $("#free").html(str);
+          $("#hot").html(str);
+          $("#new-recommend").html(str);
+          $("#hot-recommend").html(str);
+          $("#recommend-recommend").html(str);
+          $("#more").html(str);
+        }
+        $.each(res.data.free, function (i, novel) {
+          str += "<li class='scroll-item'>";
+          str +=
+            '<a href="/book/src/book-detail.html?novel_id=' +
+            novel.novel_id +
+            '">';
+          str += "<figure>";
+          str +=
+            '<img src="' + novel.img + '" class="img-bespread" alt="loading">';
+          str += "<p>限时免费</p>";
+          str += "</figure>";
+          str += '<h5 class="none">' + novel.name + "</h5>";
+          str += "</a>";
+          str += "</li>";
+        });
+        $("#free").html(str);
+        str = "";
+        $.each(res.data.hot, function (i, novel) {
+          str += "<li class='scroll-item'>";
+          str +=
+            '<a href="/book/src/book-detail.html?novel_id=' +
+            novel.novel_id +
+            '">';
+          str += "<figure>";
+          str +=
+            '<img src="' + novel.img + '" class="img-bespread" alt="loading">';
+          str += "<p>限时免费</p>";
+          str += "</figure>";
+          str += '<h5 class="none">' + novel.name + "</h5>";
+          str += "</a>";
+          str += "</li>";
+        });
+        $("#hot").html(str);
+        str = "";
+        $.each(res.data.newr, function (i, novel) {
+          str += "<li class='scroll-item'>";
+          str +=
+            '<a href="/book/src/book-detail.html?novel_id=' +
+            novel.novel_id +
+            '">';
+          str += "<figure>";
+          str +=
+            '<img src="' + novel.img + '" class="img-bespread" alt="loading">';
+          str += "<p>限时免费</p>";
+          str += "</figure>";
+          str += '<h5 class="none">' + novel.name + "</h5>";
+          str += "</a>";
+          str += "</li>";
+        });
+        $("#new-recommend").html(str);
+        str = "";
+        $.each(res.data.hotr, function (i, novel) {
+          str += "<li>";
+          str +=
+            '<a href="/book/src/book-detail.html?novel_id=' +
+            novel.novel_id +
+            '">';
+          str += '<span class="title">[现言]</span>' + novel.name + "</li></a>";
+        });
+        $("#hot-recommend").html(str);
+        str = "";
+        $.each(res.data.recr, function (i, novel) {
+          str += "<li>";
+          str +=
+            '<a href="/book/src/book-detail.html?novel_id=' +
+            novel.novel_id +
+            '">';
+          str += '<span class="title">[推荐]</span>' + novel.name + "</li></a>";
+        });
+        $("#recommend-recommend").html(str);
+        str = "";
+        $.each(res.data.more, function (i, novel) {
+          str +=
+            '<a href="/book/src/book-detail.html?novel_id=' +
+            novel.novel_id +
+            '">';
+          str += '<li class="section flex mt1rem recharge-col">';
+          str += "<div class=recommend-img>";
+          str += '<img src="' + novel.img + '" alt="loading.."></div>';
+          str += '<div class="box-flex-1">';
+          str += '<h4 class="none">' + novel.name + "</h4>";
+          str += '<p class="fz14rem line-limit-length">' + novel.intro + "</p>";
+          str += "</div></li>";
+          str += "</a>";
+        });
+        $("#more").html(str);
+      }
+    },
+    });
+  </script>
+  <script src="/book/src/js/tranlate.js"></script>
+</html>

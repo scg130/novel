@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <title>目录</title>
+    <link rel="stylesheet" href="fonts/iconfont.css" />
+    <link rel="stylesheet" href="css/style.min.css" />
+    <script src="js/loading.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="flex flex-vc color-white book-detail-title">
+        <div class="left" onclick="back()"><i class="icon-zuoleft157"></i></div>
+        <div class="box-flex-1 title"><h4 class="fz14rem" id="title"></h4></div>
+        <div class="right">
+          <a href="/book/index.html"><i class="icon-zhuye1"></i></a>
+        </div>
+      </div>
+    </header>
+    <!--我的书架-->
+    <div class="bookshelf-box">
+      <!--书籍目录-->
+      <div class="section recharge-col book-mulu">
+        <h3 class="fz2rem book-detail-titles">
+          <i class="icon-mulu"></i>书籍目录
+        </h3>
+        <p id="author"></p>
+        <div class="bookshelf-title flex flex-vc text-center">
+          <a
+            href="javascript:;"
+            onclick="cate(this,'asc')"
+            class="box-flex-1 active fz16rem"
+            ><i class="icon-xia"></i>正序</a
+          >
+          <a
+            href="javascript:;"
+            onclick="cate(this,'desc')"
+            class="box-flex-1 fz16rem"
+            ><i class="icon-shang"></i>倒序</a
+          >
+        </div>
+        <p class="color-blue">全部章节</p>
+        <ul class="none book-mulu-items fz16rem mt1rem" id="chapters"></ul>
+      </div>
+    </div>
+  </body>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+    var novel_id = GetQueryValue("novel_id");
+    $.get("/novel/novel?novel_id=" + novel_id, function (res) {
+      if (res.code == 0) {
+        $("#title").text(res.data.name);
+        $("#author").text("作者：" + res.data.author);
+      }
+    });
+    $.get(
+      "/novel/chapters?novel_id=" + novel_id + "&page=1&size=100000",
+      function (res) {
+        if (res.code == 0) {
+          var str = "";
+          if (res.data == null) $("#chapters").html(str);
+          $.each(res.data, function (i, chapter) {
+            if (chapter.is_vip == 1) {
+              str +=
+                '<li><a href="/book/src/book-read.html?novel_id=' +
+                novel_id +
+                "&num=" +
+                chapter.num +
+                '"><i class="icon-vip"></i>第' +
+                chapter.num +
+                "章 " +
+                chapter.title +
+                "</a></li>";
+            } else {
+              str +=
+                '<li><a href="/book/src/book-read.html?novel_id=' +
+                novel_id +
+                "&num=" +
+                chapter.num +
+                '">第' +
+                chapter.num +
+                "章 " +
+                chapter.title +
+                "</a></li>";
+            }
+          });
+          $("#chapters").html(str);
+        }
+      }
+    );
+    function cate(obj, type) {
+      $(obj).siblings().removeClass("active");
+      $(obj).addClass("active");
+      $.get(
+        "/novel/chapters?novel_id=" +
+          novel_id +
+          "&page=1&size=100000&type=" +
+          type,
+        function (res) {
+          if (res.code == 0) {
+            var str = "";
+            if (res.data == null) $("#chapters").html(str);
+            $.each(res.data, function (i, chapter) {
+              if (chapter.is_vip == 1) {
+                str +=
+                  '<li><a href="/book/src/book-read.html?novel_id=' +
+                  novel_id +
+                  "&num=" +
+                  chapter.num +
+                  '"><i class="icon-vip"></i>第' +
+                  chapter.num +
+                  "章 " +
+                  chapter.title +
+                  "</a></li>";
+              } else {
+                str +=
+                  '<li><a href="/book/src/book-read.html?novel_id=' +
+                  novel_id +
+                  "&num=" +
+                  chapter.num +
+                  '">第' +
+                  chapter.num +
+                  "章 " +
+                  chapter.title +
+                  "</a></li>";
+              }
+            });
+            $("#chapters").html(str);
+          }
+        }
+      );
+    }
+  </script>
+  <script src="/book/src/js/tranlate.js"></script>
+</html>

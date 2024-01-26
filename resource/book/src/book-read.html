@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <title>阅读</title>
+    <link rel="stylesheet" href="fonts/iconfont.css" />
+    <link rel="stylesheet" href="css/style.min.css" />
+    <link rel="stylesheet" href="layui/dist/css/layui.css" />
+    <script src="js/loading.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="flex flex-vc color-white book-detail-title">
+        <div class="left" onclick="back()"><i class="icon-zuoleft157"></i></div>
+        <div class="box-flex-1 title"><h4 class="fz14rem" id="title"></h4></div>
+        <div class="right">
+          <a href="#" id="mulu"><i class="icon-mulu"></i></a
+          ><span class="fg"></span
+          ><a href="/book/index.html"><i class="icon-zhuye1"></i></a>
+        </div>
+      </div>
+    </header>
+    <!--书籍详情-->
+    <div class="recharge-col book-read-box">
+      <h4 class="fz2rem" id="title_copy"></h4>
+      <div>
+        <ul class="none flex text-center color-blue">
+          <li class="box-flex-1 book-read-setting setting-light">
+            <i class="icon-qingyewan"></i><span>关灯</span>
+          </li>
+          <li class="box-flex-1 book-read-setting setting-upfont">
+            <i class="icon-edite"></i>放大字体
+          </li>
+          <li class="box-flex-1 book-read-setting setting-downfont">
+            <i class="icon-fontm"></i>缩小字体
+          </li>
+        </ul>
+      </div>
+      <article class="" id="article"></article>
+      <div class="flex text-center color-white">
+        <a href="#" class="btn-page box-flex-1" onclick="prevChapter()"
+          >上一章</a
+        >
+        <a href="#" class="btn-page box-flex-1" id="catalogue">目录</a>
+        <a href="#" class="btn-page box-flex-1" onclick="nextChapter()"
+          >下一章</a
+        >
+      </div>
+    </div>
+    <!--推荐书籍-->
+    <div class="recommend mt1rem">
+      <ul class="none" id="recommend"></ul>
+    </div>
+    <!--底部-->
+    <footer class="footer">
+      <ul class="none">
+        <li class=""><a href="/book/src/user-center.html">登录</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/index.html">首页</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/src/recharge.html">充值</a></li>
+      </ul>
+      <!-- <p class="none">客服QQ：123435666</p> -->
+      <p class="none">
+        <a href="http://beian.miit.gov.cn/">黔ICP备2022002579号</a>
+      </p>
+    </footer>
+  </body>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/script.js"></script>
+  <script src="layui/dist/layui.js"></script>
+  <script>
+    var novel_id = GetQueryValue("novel_id");
+    var num = GetQueryValue("num");
+    var totalChapters = 0;
+    //设置字体
+    function set_font(article, fontArray) {
+      if (window.localStorage) {
+        localStorage.setItem("fontsize", fontArray.index);
+        article.removeClass().addClass(fontArray.font);
+      } else {
+        article.addClass(fontArray.font);
+      }
+    }
+    //初始化字体
+    function init_font(article, fontArray) {
+      article.addClass(fontArray);
+    }
+    $(function () {
+      //字体选择
+      var fontArray = [
+        {
+          index: 0,
+          font: "fz12rem",
+        },
+        {
+          index: 1,
+          font: "fz14rem",
+        },
+        {
+          index: 2,
+          font: "fz16rem",
+        },
+        {
+          index: 3,
+          font: "fz18rem",
+        },
+        {
+          index: 4,
+          font: "fz2rem",
+        },
+      ];
+      var i = localStorage.getItem("fontsize") || 1; //默认fz14rem
+      var article = $("article"), //文章
+        font = fontArray[i].font; //当前本地存储的字体大小
+      init_font(article, fontArray[i].font); //初始化字体大小
+
+      //关灯
+      $(".setting-light").on("click", function () {
+        var $this = $(this);
+        var $body = $("body");
+        $body.toggleClass("read-light");
+        var text = $this.find("span");
+        if ($body.hasClass("read-light")) {
+          text.html("开灯");
+        } else {
+          text.html("关灯");
+        }
+      });
+
+      $(".setting-upfont").on("click", function () {
+        if (i == fontArray.length - 1) {
+          return;
+        } else {
+          i++;
+        }
+        set_font(article, fontArray[i]);
+      });
+
+      $(".setting-downfont").on("click", function () {
+        if (i == 0) {
+          return;
+        } else {
+          i--;
+        }
+        set_font(article, fontArray[i]);
+      });
+    });
+    $("#catalogue").attr(
+      "href",
+      "/book/src/book-catalogue.html?novel_id=" + novel_id
+    );
+    $("#mulu").attr(
+      "href",
+      "/book/src/book-catalogue.html?novel_id=" + novel_id
+    );
+
+    $.get("/novel/novel?novel_id=" + novel_id, function (res) {
+      if (res.code == 0) {
+        $("#title").text(res.data.name);
+        totalChapters = res.data.chapter_current;
+      }
+    });
+
+    $.ajax({
+      url: "/novel/chapter?novel_id=" + novel_id + "&num=" + num,
+      cache: false,
+      success: function (res) {
+        if (res.code == 0) {
+          $("#article").html(res.data.content);
+          $("#title_copy").text("第" + res.data.num + "章" + res.data.title);
+        } else if (res.code == 1) {
+          var str = "<div><h4>是否花费100读书币购买此章节</h4></div>";
+          layer.confirm(
+            str,
+            { btn: ["确定", "取消"], title: "提示" },
+            function () {
+              $.ajax({
+                type: "get",
+                url:
+                  "/novel/buy_chapter?novel_id=" +
+                  novel_id +
+                  "&num=" +
+                  num +
+                  "&chapter_id=" +
+                  res.data.chapter_id,
+                dataType: "json",
+                success: function (data) {
+                  if (data.code == 0) {
+                    layer.msg("购买成功", { icon: 1 });
+                    window.location.reload();
+                  } else {
+                    layer.msg(data.msg, { icon: 2 });
+                  }
+                },
+              });
+            }
+          );
+        } else {
+          layer.msg(
+            res.msg,
+            {
+              time: 1000,
+            },
+            function () {
+              window.location.href = "/book/src/user-center.html";
+            }
+          );
+        }
+      },
+      statusCode: {
+        401: function () {
+          layer.msg(
+            "请先登录！",
+            {
+              time: 1000,
+            },
+            function () {
+              window.location.href = "/book/src/login.html";
+            }
+          );
+        },
+        402: function () {
+          layer.msg(
+            "请先登录！",
+            {
+              time: 1000,
+            },
+            function () {
+              window.location.href = "/book/src/login.html";
+            }
+          );
+        },
+      },
+    });
+
+    function prevChapter() {
+      if (num - 1 == 0) {
+        return;
+      }
+      window.location.href =
+        "/book/src/book-read.html?novel_id=" + novel_id + "&num=" + (num - 1);
+    }
+
+    function nextChapter() {
+      if (parseInt(num) == totalChapters) {
+        return;
+      }
+      window.location.href =
+        "/book/src/book-read.html?novel_id=" +
+        novel_id +
+        "&num=" +
+        (parseInt(num) + 1);
+    }
+  </script>
+  <script src="/book/src/js/tranlate.js"></script>
+</html>

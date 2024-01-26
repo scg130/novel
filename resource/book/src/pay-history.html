@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <title>交易记录</title>
+    <link rel="stylesheet" href="fonts/iconfont.css" />
+    <link rel="stylesheet" href="css/style.min.css" />
+    <script src="js/loading.js"></script>
+  </head>
+  <body>
+    <header class="header flex flex-vc">
+      <div class="l">
+        <a href="/book/index.html"><i class="icon-zhuye1"></i></a>
+      </div>
+      <div class="c box-flex-1 text-center"><h1>潇湘书院</h1></div>
+      <div class="r text-right">
+        <a href="/book/src/user-center.html"><i class="icon-zhuye"></i></a>
+      </div>
+    </header>
+    <div class="pay-history">
+      <div class="public-title section">
+        <h2 class="none fz16rem">章节购买记录</h2>
+      </div>
+      <div class="pay-history-table section recharge-col mt1rem text-center">
+        <table id="table">
+          <thead>
+            <tr>
+              <td><i class="icon-yuedu1"></i>书名</td>
+              <td><i class="icon-qianbao1"></i>消费金币</td>
+              <td><i class="icon-chakan"></i>操作</td>
+            </tr>
+          </thead>
+          <tbody id="table-data">
+            <tr>
+              <td>我不是潘金莲</td>
+              <td>446</td>
+              <td><a href="javascript:;">删除</a></td>
+            </tr>
+            <tr>
+              <td>我不是潘金莲</td>
+              <td>446</td>
+              <td><a href="javascript:;">删除</a></td>
+            </tr>
+            <tr>
+              <td>我不是潘金莲</td>
+              <td>446</td>
+              <td><a href="javascript:;">删除</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <!--没有记录显示这个-->
+        <div class="text-center book-null" id="no-data" style="display: none">
+          <p>
+            <i class="icon-shape"></i>
+          </p>
+          <p>暂无记录</p>
+        </div>
+      </div>
+    </div>
+    <!--底部-->
+    <footer class="footer">
+      <ul class="none">
+        <li class=""><a href="/book/src/user-center.html">登录</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/index.html">首页</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/src/recharge.html">充值</a></li>
+      </ul>
+      <!-- <p class="none">客服QQ：123435666</p> -->
+      <p class="none">
+        <a href="http://beian.miit.gov.cn/">黔ICP备2022002579号</a>
+      </p>
+    </footer>
+  </body>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/script.js"></script>
+  <script src="layui/dist/layui.js"></script>
+  <script>
+    var page = GetQueryValue("page");
+    page = page == null ? 1 : page;
+
+    $.ajax({
+      url: "/novel/buy_logs?page=" + page + "&size=10",
+      contentType: "application/json",
+      dataType: "json",
+      type: "GET",
+      success: function (res) {
+        if (res.code == 0) {
+          if (res.data == null) {
+            $("#table").css("display", "none");
+            $("#no-data").css("display", "block");
+          } else {
+            var str = "";
+            $.each(res.data, function (i, log) {
+              str += "<tr>";
+              str += "<td>" + log.novel_name + "</td>";
+              str += "<td>" + log.amount + "</td>";
+              str += '<td><a href="javascript:;"></a></td>';
+              str += "</tr>";
+            });
+            $("#table-data").html(str);
+          }
+        }
+      },
+      statusCode: {
+        401: function () {
+          layer.msg(
+            "请先登录",
+            {
+              time: 1000,
+            },
+            function () {
+              window.location.href = "/book/src/login.html";
+            }
+          );
+        },
+        402: function () {
+          layer.msg(
+            "请先登录",
+            {
+              time: 1000,
+            },
+            function () {
+              window.location.href = "/book/src/login.html";
+            }
+          );
+        },
+      },
+    });
+  </script>
+  <script src="/book/src/js/tranlate.js"></script>
+</html>

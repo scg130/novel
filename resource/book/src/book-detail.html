@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <title>书库</title>
+    <link rel="stylesheet" href="fonts/iconfont.css" />
+    <link rel="stylesheet" href="css/style.min.css" />
+    <link rel="stylesheet" href="layui/dist/css/layui.css" />
+    <script src="js/loading.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="flex flex-vc color-white book-detail-title">
+        <div class="left" onclick="back()"><i class="icon-zuoleft157"></i></div>
+        <div class="box-flex-1 title"><h4 class="fz14rem" id="nav"></h4></div>
+        <div class="right">
+          <a href="#" id="mulu"><i class="icon-mulu"></i></a
+            ><span class="fg"></span
+            ><a href="/book/index.html"><i class="icon-zhuye1"></i></a>
+        </div>
+      </div>
+    </header>
+    <!--书籍详情-->
+    <div class="section recharge-col book-detail-box flex">
+      <div class="book-detail-img">
+        <img src="" alt="loading.." class="img-bespread" id="img" />
+      </div>
+      <div class="box-flex-1 book-detail-info">
+        <h4 class="none color-blue title" id="novel_name"></h4>
+        <span class="state ing"
+          ><i class="icon-yuedu" id="novel_status"></i
+        ></span>
+        <!--<span class="state end">已完结</span>-->
+        <div class="fz12rem mt1rem">
+          <p class="none" id="novel_author"></p>
+          <!-- <p class="none " id="novel_cate"></p> -->
+          <p class="none" id="words"></p>
+        </div>
+      </div>
+    </div>
+    <div class="section flex recharge-col book-operation">
+      <a href="#" id="join" class="btn btn-primary box-flex-1"
+        ><i class="icon-kongxin"></i>加入书架</a
+      >
+      <span class="fg"></span>
+      <a href="#" id="start-read" class="btn btn-success box-flex-1"
+        ><i class="icon-chakan"></i>开始阅读</a
+      >
+    </div>
+    <!--书籍简介-->
+    <div class="section recharge-col book-intro">
+      <h3 class="fz2rem book-detail-titles">
+        <i class="icon-yuedu1"></i>书籍简介
+      </h3>
+      <article class="fz14rem book-intro-article">
+        <!--intro-->
+        <p id="novel_intro"></p>
+      </article>
+      <div class="text-center book-intro-unfold">
+        展开更多介绍 <i class="icon-xia"></i>
+      </div>
+    </div>
+    <!--书籍目录-->
+    <div class="section recharge-col mt1rem book-mulu">
+      <h3 class="fz2rem book-detail-titles">
+        <i class="icon-mulu"></i>书籍目录
+      </h3>
+      <div class="book-all-mulu color-blue">
+        <i class="icon-xia pull-right"></i>全部章节
+      </div>
+      <ul class="none book-mulu-items fz16rem" id="chapters"></ul>
+      <p id="more" style="margin-left:40%"><button id="more-btn" color="blue !important">获取更多章节</button></p>
+    </div>
+    <!--搜索框-->
+    <!-- <div class="search-box">
+    <div class="search">
+        <input type="text" class="inp inp-block search-inp" placeholder="请输入关键字">
+        <input type="submit" class="btn search-btn" value="搜索">
+    </div>
+</div> -->
+    <!--底部-->
+    <footer class="footer">
+      <ul class="none">
+        <li class=""><a href="/book/src/user-center.html">登录</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/index.html">首页</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/src/recharge.html">充值</a></li>
+      </ul>
+      <!-- <p class="none">客服QQ：123435666</p> -->
+      <p class="none">
+        <a href="http://beian.miit.gov.cn/">黔ICP备2022002579号</a>
+      </p>
+    </footer>
+  </body>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/script.js"></script>
+  <script src="layui/dist/layui.js"></script>
+  <script>
+    $(function () {
+      toggle_mulu();
+    });
+    //展开更多介绍
+    var len = 50;
+    var page = 1;
+    var alltext = "";
+    var shorttext = "";
+    $(".book-intro-unfold").on("click", function () {
+      var $this = $(this);
+      if (alltext.length < len) {
+        return;
+      }
+
+      if ($this.hasClass("isAll")) {
+        $this.addClass("rotate").removeClass("isAll");
+        $("#novel_intro").html(alltext);
+      } else {
+        $this.addClass("isAll").removeClass("rotate");
+        $("#novel_intro").html(sub_str(alltext, len));
+      }
+    });
+
+    //截取字符
+    function sub_str(ele, length) {
+      return ele.replace(/\s/g, "").substr(0, length) + "。。。";
+    }
+
+    //展开目录
+    function toggle_mulu() {
+      var $book = $(".book-all-mulu");
+      $book.on("click", function () {
+        var $this = $(this);
+        $this.toggleClass("toggle rotate");
+      });
+    }
+    var novel_id = GetQueryValue("novel_id");
+    $("#mulu").attr(
+      "href",
+      "/book/src/book-catalogue.html?novel_id=" + novel_id
+      );
+    $.get("/novel/novel?novel_id=" + novel_id, function (res) {
+      if (res.code == 0) {
+        alltext = res.data.intro;
+        shorttext = sub_str(alltext, len);
+        $("#novel_intro").html(shorttext);
+
+        $("#nav").text(res.data.name);
+        $("#novel_name").text(res.data.name);
+        $("#novel_author").text("作者：" + res.data.author);
+        $("#words").text("字数：" + res.data.words);
+        $("#novel_status").text("连载中...");
+        $("#img").attr("src", res.data.img);
+        if (res.data.chapter_total == res.data.chapter_current) {
+          $("#novel_status").text("已完结");
+        }
+      }
+    });
+
+    $("#join").click(function () {
+      // $.get("/novel/join-book?novel_id="+novel_id,function (res) {
+      //     if (res.code == 0) {
+      //         window.location.href = "/book/src/bookshelf.html"
+      //     }
+      // })
+      $.ajax({
+        url: "/novel/join-book?novel_id=" + novel_id,
+        contentType: "application/json",
+        dataType: "json",
+        type: "GET",
+        success: function (res) {
+          if (res.code == 0) {
+            window.location.href = "/book/src/bookshelf.html";
+          }
+        },
+        statusCode: {
+          401: function () {
+            layer.msg(
+              "请先登录！",
+              {
+                time: 1000,
+              },
+              function () {
+                window.location.href = "/book/src/login.html";
+              }
+            );
+          },
+          402: function () {
+            layer.msg(
+              "请先登录！",
+              {
+                time: 1000,
+              },
+              function () {
+                window.location.href = "/book/src/login.html";
+              }
+            );
+          },
+        },
+      });
+    });
+    getChapters();
+    function getChapters(){
+      $.get(
+      "/novel/chapters?novel_id=" + novel_id + "&page="+page+"&size=200",
+      function (res) {
+        $("#more-btn").attr("disabled", null);
+        if (res.code == 0) {
+          var str = "";
+          if (res.data == null) {
+              return
+          }
+          page = res.cur_page + 1;
+          $.each(res.data, function (i, chapter) {
+            if (i == 0) {
+              $("#start-read").attr(
+                "href",
+                "/book/src/book-read.html?novel_id=" +
+                  novel_id +
+                  "&num=" +
+                  chapter.num
+              );
+            }
+            if (chapter.is_vip == 1) {
+              str +=
+                '<li><a href="/book/src/book-read.html?novel_id=' +
+                novel_id +
+                "&num=" +
+                chapter.num +
+                '"><i class="icon-vip"></i>第' +
+                chapter.num +
+                "章 " +
+                chapter.title +
+                "</a></li>";
+            } else {
+              str +=
+                '<li><a href="/book/src/book-read.html?novel_id=' +
+                novel_id +
+                "&num=" +
+                chapter.num +
+                '">第' +
+                chapter.num +
+                "章 " +
+                chapter.title +
+                "</a></li>";
+            }
+          });
+          var context = $("#chapters").html();
+          $("#chapters").html(context+str);
+        }
+      }
+    );
+    }
+
+    $("#more").click(function () {
+      $("#more-btn").attr("disabled", "disabled");
+       getChapters();
+    });
+  </script>
+  <script src="/book/src/js/tranlate.js"></script>
+</html>

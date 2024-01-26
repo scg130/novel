@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <title>书库</title>
+    <link rel="stylesheet" href="fonts/iconfont.css" />
+    <link rel="stylesheet" href="css/style.min.css" />
+    <script src="js/loading.js"></script>
+  </head>
+  <body>
+    <header class="header flex flex-vc">
+      <div class="l">
+        <a href="../index.html"><i class="icon-zhuye1"></i></a>
+      </div>
+      <div class="c box-flex-1 text-center"><h1>潇湘书院</h1></div>
+      <div class="r text-right">
+        <a href="user-center.html"><i class="icon-zhuye"></i></a>
+      </div>
+    </header>
+    <!--搜索框-->
+    <div class="search-box">
+      <div class="search">
+        <input
+          type="text"
+          class="inp inp-block search-inp"
+          id="keyword"
+          placeholder="请输入关键字"
+        />
+        <input
+          type="submit"
+          class="btn search-btn"
+          onclick="searchNovels()"
+          value="搜索"
+        />
+      </div>
+    </div>
+    <!--我的书架-->
+    <div class="section bookzoom-box">
+      <h3 class="fz2rem"><i class="icon-yuedu"></i>新华书店</h3>
+      <!--分类-->
+      <div class="bookzoom-classify flex">
+        <span>分类:</span>
+        <div class="box-flex-1" id="cates"></div>
+      </div>
+      <div class="bookzoom-classify flex">
+        <span>字数:</span>
+        <div class="box-flex-1" id="words"></div>
+      </div>
+      <div class="bookzoom-classify flex" style="display: none">
+        <span>排序:</span>
+        <div class="box-flex-1" id="hot">
+          <a href="#" class="active">不限</a>
+          <a href="#">周人气</a>
+          <a href="#">月人气</a>
+          <a href="#">总人气</a>
+          <a href="#">字数</a>
+        </div>
+      </div>
+    </div>
+    <div class="section bookzoom-books mt1rem" id="novels">
+      <!--分页-->
+    </div>
+    <!--底部-->
+    <footer class="footer">
+      <ul class="none">
+        <li class=""><a href="/book/src/user-center.html">登录</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/index.html">首页</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/src/recharge.html">充值</a></li>
+      </ul>
+      <!-- <p class="none">客服QQ：123435666</p> -->
+      <p class="none">
+        <a href="http://beian.miit.gov.cn/">黔ICP备2022002579号</a>
+      </p>
+    </footer>
+  </body>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+    var page_size = 10;
+    var page = GetQueryValue("page");
+    page = page == null ? 1 : page;
+    var cate = GetQueryValue("cate_id");
+    cate = cate == null ? 0 : cate;
+    var words = GetQueryValue("words");
+    words = words == null ? 0 :  words;
+    var name = GetQueryValue("name");
+    name = name == "null" ? "" : name;
+    var query = decodeURI(window.location.search.substring(1));
+    function searchNovels() {
+      query_name = query.replace(
+        "name=" + name,
+        "name=" + $("#keyword").val()
+      ).replace(
+        new RegExp("page=[0-9]+","g"),
+        "page=1"
+        );
+       window.location.href = "/book/src/bookzoom.html?"+ query_name ;
+    }
+    $("#keyword").val(name);
+    $.get("/novel/cates?page=1&size=100", function (res) {
+      if (res.code == 0) {
+        query_cate = query.replace(
+          "cate_id=" + cate,
+          "cate_id=0"
+        );
+        var str = '<a href="/book/src/bookzoom.html?'+query_cate +'" id="cate_id_0">全部</a>';
+        $.each(res.data, function (i, item) {
+          query_cate = query.replace(
+            new RegExp("cate_id=[0-9]+" ,"g"),
+            "cate_id="+item.cate_id
+          );
+          str += '<a href="/book/src/bookzoom.html?' + query_cate +'" id="cate_id_'+item.cate_id+'">' + item.name + "</a>";
+        });
+        $("#cates").html(str);
+        var obj = document.getElementById("cate_id_" + cate);
+        $(obj).addClass("active").siblings().removeClass("active");
+      }
+    });
+    var query = decodeURI(window.location.search.substring(1));
+
+    // query = query.replace(
+    //   new RegExp("page=[0-9]+","g"),
+    //   "page=1"
+    // );
+    query0 = query.replace(
+            "words=" + words,
+            "words=0"
+          );
+    var wordStr =
+      '<a id="words_0" href="/book/src/bookzoom.html?' +
+      query0 + '" class="active">不限</a>';
+      query3000000 = query.replace(
+            "words=" + words,
+            "words=3000000"
+          );
+    wordStr +=
+      '<a id="words_3000000" href="/book/src/bookzoom.html?' +
+      query3000000 + '">300万以下</a>';
+
+      query5000000 = query.replace(
+            "words=" + words,
+            "words=5000000"
+          );  
+    wordStr +=
+      '<a id="words_5000000" href="/book/src/bookzoom.html?' +
+      query5000000 + '">300万-500万</a>';
+      query10000000 = query.replace(
+            "words=" + words,
+            "words=10000000"
+          );
+    wordStr +=
+      '<a id="words_10000000" href="/book/src/bookzoom.html?' +
+      query10000000 +'">500万-1000万</a>';
+      query10000001 = query.replace(
+            "words=" + words,
+            "words=10000001"
+          );
+      wordStr +=
+      '<a id="words_10000001" href="/book/src/bookzoom.html?' +
+      query10000001 + '">1000万以上</a>';
+    $("#words").html(wordStr);
+    var wordsObj = document.getElementById("words_" + words);
+    $(wordsObj).addClass("active").siblings().removeClass("active");
+    $.get(
+      "/novel/list?" + query + "&size="+page_size,
+      function (res) {
+        if (res.code == 0) {
+          if (res.data == null) {
+            $("#novels").html(
+              '<div class="text-center book-null"><p><i class="icon-shape"></i></p><p>书架空空的~什么都没有</p></div>'
+            );
+            return;
+          }
+          var str = '<ul class="none"">';
+          $.each(res.data, function (i, novel) {
+            str += '<div class="box-flex-1">';
+            str += '<h4 class="none">';
+            // str += '<i class="icon-vip"></i>';
+            str +=
+              '<a href="/book/src/book-detail.html?novel_id=' +
+              novel.novel_id +
+              '">' +
+              novel.name +
+              "</a>";
+            str += "</h4>";
+            str +=
+              '<p class="none fz14rem">最新：' + novel.new_chapter + "</p>";
+            str +=
+              '<p class="none fz12rem color-grey">作者：' +
+              novel.author +
+              '<span class="fg"></span>字数：' +
+              novel.words +
+              "字</p>";
+            str += "</div>";
+            str +=
+              '<div class="text-right color-grey fz12rem">' +
+              novel.updated_at +
+              "</div>";
+          });
+          str += "</ul>";
+          var pages = Math.ceil(res.total / page_size);
+          str += '<div class="text-center recharge-col page-list mt1rem">';
+            query_page = query.replace(
+            "page=" + page,
+            "page="+ (res.cur_page - 1 > 0 ? res.cur_page - 1 : 1)
+            );
+            str +=
+              '<a href="/book/src/bookzoom.html?' + query_page + '">上一页</a>';
+          
+          for (i = 1; i <= pages; i++) {
+            if (res.cur_page == i) {
+              str += "<span>" + i + "</span>";
+            } else {
+              query_page = query.replace(
+                new RegExp("page=[0-9]+" ,"g"),
+                "page="+ i
+              );
+              str += '<a href="/book/src/bookzoom.html?' + query_page + '">' + i + "</a>";
+            }
+          }
+          query_page = query.replace(
+            "page=" + page,
+            "page="+ (res.cur_page + 1 >= pages ? pages : res.cur_page + 1)
+          );
+          str += '<a href="/book/src/bookzoom.html?' + query_page + '">下一页</a>';
+          
+          query_page = query.replace(
+            "page=" + page,
+            "page="+ pages
+          );
+          str += '<a href="/book/src/bookzoom.html?' + query_page + '">末页</a></div>';
+          $("#novels").html(str);
+        }
+      }
+    );
+    $(function () {
+      //选项卡切换
+      var $bookshelf_title = $(".bookshelf-title>a");
+      $bookshelf_title.on("click", function () {
+        var $this = $(this),
+          $content = $(".bookshelf-content").find(".bookshelf-read"),
+          $index = $bookshelf_title.index(this);
+        $this.addClass("active").siblings().removeClass("active");
+        $content.eq($index).show().siblings().hide();
+      });
+    });
+  </script>
+  <script src="/book/src/js/tranlate.js"></script>
+</html>

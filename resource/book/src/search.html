@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <title>搜索</title>
+    <link rel="stylesheet" href="fonts/iconfont.css" />
+    <link rel="stylesheet" href="css/style.min.css" />
+    <script src="js/loading.js"></script>
+  </head>
+  <body>
+    <header class="header flex flex-vc">
+      <div class="l">
+        <a href="/book/index.html"><i class="icon-zhuye1"></i></a>
+      </div>
+      <div class="c box-flex-1 text-center"><h1>潇湘书院</h1></div>
+      <div class="r text-right">
+        <a href="/book/src/user-center.html"><i class="icon-zhuye"></i></a>
+      </div>
+    </header>
+    <!--搜索框-->
+    <div class="search-box">
+      <div class="search">
+        <input
+          type="text"
+          class="inp inp-block search-inp"
+          placeholder="请输入关键字"
+          id="search"
+        />
+        <button class="btn search-btn" onclick="searchNovel()">搜索</button>
+      </div>
+      <div class="recommend mt1rem">
+        <ul class="none" id="more"></ul>
+      </div>
+    </div>
+    <footer class="footer">
+      <ul class="none">
+        <li class=""><a href="/book/src/user-center.html">登录</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/index.html">首页</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/src/recharge.html">充值</a></li>
+      </ul>
+      <!-- <p class="none">客服QQ：123435666</p> -->
+      <p class="none">
+        <a href="http://beian.miit.gov.cn/">黔ICP备2022002579号</a>
+      </p>
+    </footer>
+  </body>
+  <script src="/book/src/js/jquery.min.js"></script>
+  <script>
+    function searchNovel() {
+      $.get(
+        "/novel/search?page=1&size=100&name=" + $("#search").val(),
+        function (res) {
+          if (res.code == 0) {
+            var str = "";
+            if (res.data == null) $("#more").html(str);
+
+            $.each(res.data, function (i, novel) {
+              str +=
+                '<a href="/book/src/book-detail.html?novel_id=' +
+                novel.novel_id +
+                '">';
+              str += '<li class="section flex mt1rem recharge-col">';
+              str += "<div class=recommend-img>";
+              str += '<img src="' + novel.img + '" alt="loading.."></div>';
+              str += '<div class="box-flex-1">';
+              str += '<h4 class="none">' + novel.name + "</h4>";
+              str +=
+                '<p class="fz14rem line-limit-length">' + novel.intro + "</p>";
+              str += "</div></li>";
+              str += "</a>";
+            });
+            $("#more").html(str);
+          }
+        }
+      );
+    }
+  </script>
+  <script src="/book/src/js/tranlate.js"></script>
+</html>

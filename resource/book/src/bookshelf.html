@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <title>书架</title>
+    <link rel="stylesheet" href="fonts/iconfont.css" />
+    <link rel="stylesheet" href="css/style.min.css" />
+    <script src="js/loading.js"></script>
+  </head>
+  <body>
+    <header class="header flex flex-vc">
+      <div class="l">
+        <a href="../index.html"><i class="icon-zhuye1"></i></a>
+      </div>
+      <div class="c box-flex-1 text-center"><h1>潇湘书院</h1></div>
+      <div class="r text-right">
+        <a href="user-center.html"><i class="icon-zhuye"></i></a>
+      </div>
+    </header>
+    <!--搜索框-->
+    <div class="search-box">
+      <div class="search">
+        <input
+          type="text"
+          id="keyword"
+          class="inp inp-block search-inp"
+          placeholder="请输入关键字"
+        />
+        <button onclick="searchNotes()" class="btn search-btn">搜索</button>
+      </div>
+    </div>
+    <!--我的书架-->
+    <div class="bookshelf-box">
+      <h3 class="fz2rem"><i class="icon-yuedu1"></i>我的书架</h3>
+      <div class="bookshelf-title flex flex-vc text-center">
+        <a
+          href="javascript:;"
+          id="reading"
+          onclick="searchTab(0)"
+          class="box-flex-1 active fz16rem"
+          ><i class="icon-yuedu"></i>正在阅读 <span class="bar"></span
+        ></a>
+        <a
+          href="javascript:;"
+          id="readed"
+          onclick="searchTab(1)"
+          class="box-flex-1 fz16rem"
+          ><i class="icon-yuedu"></i>已读完 <span class="bar"></span
+        ></a>
+      </div>
+      <div class="bookshelf-content" id="notes"></div>
+    </div>
+    <!--底部-->
+    <footer class="footer">
+      <ul class="none">
+        <li class=""><a href="/book/src/user-center.html">登录</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/index.html">首页</a></li>
+        <span class="fg">|</span>
+        <li class=""><a href="/book/src/recharge.html">充值</a></li>
+      </ul>
+      <!-- <p class="none">客服QQ：123435666</p> -->
+      <p class="none">
+        <a href="http://beian.miit.gov.cn/">黔ICP备2022002579号</a>
+      </p>
+    </footer>
+  </body>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+    var is_end = GetQueryValue("is_end");
+    is_end = is_end == null ? 0 : is_end;
+    if (is_end == 1) {
+      $("#readed").addClass("active").siblings().removeClass("active");
+    } else {
+      $("#reading").addClass("active").siblings().removeClass("active");
+    }
+    function searchTab(end) {
+      var query = decodeURI(window.location.search.substring(1)).replace(
+        "&is_end=" + is_end,
+        ""
+      );
+      window.location.href =
+        "/book/src/bookshelf.html?" + query + "&is_end=" + end;
+    }
+
+    var name = GetQueryValue("name");
+    name = name == "null" ? "" : name;
+    function searchNotes() {
+      var keyword = $("#keyword").val();
+      var query = decodeURI(window.location.search.substring(1)).replace(
+        "&name=" + name,
+        ""
+      );
+      window.location.href =
+        "/book/src/bookshelf.html?" + query + "&name=" + keyword;
+    }
+    $("#keyword").val(name);
+    $.ajax({
+      url: "/novel/notes?page=1&size=20&is_end=" + is_end + "&name=" + name,
+      contentType: "application/json",
+      dataType: "json",
+      type: "GET",
+      success: function (res) {
+        if (res.code == 0) {
+          if (res.data == null) {
+            $("#notes").html(
+              '<section class="section bookshelf-read bookshelf-readend recharge-col"><div class="text-center book-null"><p><i class="icon-shape"></i></p><p>书架空空的~什么都没有</p></div></section>'
+            );
+            return;
+          }
+          var str =
+            '<section class="section bookshelf-read bookshelf-reading recharge-col"><ul class="none">';
+          $.each(res.data, function (i, note) {
+            str += "<li>";
+            str +=
+              '<a href="/book/src/book-read.html?num=' +
+              note.prev_num +
+              "&novel_id=" +
+              note.novel_id +
+              '" class="pull-right">继续阅读</a>';
+            str += '<h4 class="none">' + note.novel_name + "</h4>";
+            str +=
+              '<p class="none"><a href="/book/src/book-read.html?num=' +
+              note.prev_num +
+              "&novel_id=" +
+              note.novel_id +
+              '">上次：' +
+              "第" +
+              note.prev_num +
+              "章 " +
+              note.prev_chapter +
+              "</a></p>";
+              str +=
+              '<a href="#" onclick="delNote('+note.novel_id+',this)" class="pull-right">删除</a>';
+            str +=
+              '<p class="none"><a href="/book/src/book-read.html?num=' +
+              note.new_num +
+              "&novel_id=" +
+              note.novel_id +
+              '">最新：' +
+              "第" +
+              note.new_num +
+              "章 " +
+              note.new_chapter +
+              "</a></p>";
+            str += "</li>";
+          });
+          str += "</ul></section>";
+          $("#notes").html(str);
+        }
+      },
+      statusCode: {
+        401: function () {
+          window.location.href = "/book/src/login.html";
+        },
+        402: function () {
+          window.location.href = "/book/src/login.html";
+        },
+      },
+    });
+
+    function delNote(novel_id,obj) {
+        $.get("/novel/note/del/"+novel_id, function (res) {
+          if (res.code == 0) {
+              $(obj).parent().remove();
+          }
+        });
+    }
+
+    // $.get("/novel/notes?page=1&size=20&is_end="+is_end+"&name="+name, function (res) {
+    //     if (res.code == 0) {
+    //         if (res.data == null){
+    //             $("#notes").html('<section class="section bookshelf-read bookshelf-readend recharge-col"><div class="text-center book-null"><p><i class="icon-shape"></i></p><p>书架空空的~什么都没有</p></div></section>');
+    //             return
+    //         }
+    //         var str = '<section class="section bookshelf-read bookshelf-reading recharge-col"><ul class="none">';
+    //         $.each(res.data,function (i,note) {
+    //             str += '<li>';
+    //             str += '<a href="/book/src/book-read.html?num='+note.prev_num+'&novel_id='+note.novel_id+'" class="pull-right">继续阅读</a>';
+    //             str += '<h4 class="none">'+note.novel_name+'</h4>';
+    //             str += '<p class="none"><a href="/book/src/book-read.html?num='+note.prev_num+'&novel_id='+note.novel_id+'">上次：'+note.prev_chapter+'</a></p>';
+    //             str += '<p class="none"><a href="/book/src/book-read.html?num='+note.new_num+'&novel_id='+note.novel_id+'">最新：'+note.new_chapter+'</a></p>';
+    //             str += '</li>';
+    //         })
+    //         str += '</ul></section>';
+    //         $("#notes").html(str);
+    //     }
+    // });
+    $(function () {
+      // //选项卡切换
+      // var $bookshelf_title = $(".bookshelf-title>a");
+      // $bookshelf_title.on('click',function(){
+      //     var $this = $(this),
+      //         $content = $(".bookshelf-content").find(".bookshelf-read"),
+      //         $index= $bookshelf_title.index(this);
+      //     $this.addClass('active').siblings().removeClass('active');
+      //     $content.eq($index).show().siblings().hide();
+      // })
+    });
+  </script>
+  <script src="/book/src/js/tranlate.js"></script>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no"/>
+    <title>充值</title>
+    <link rel="stylesheet" href="fonts/iconfont.css"/>
+    <link rel="stylesheet" href="css/style.min.css">
+    <link rel="stylesheet" href="layui/dist/css/layui.css">
+</head>
+<body>
+<header class="header flex flex-vc">
+    <div class="l"><a href="../index.html"><i class="icon-zhuye1"></i></a></div>
+    <div class="c box-flex-1 text-center"><h1>潇湘书院</h1></div>
+    <div class="r text-right"><a href="user-center.html"><i class="icon-zhuye"></i></a></div>
+</header>
+<!--充值-->
+<div class="recharge-box">
+    <div class="section mt1rem recharge-col">
+        <ul class="none">
+            <li class="flex">
+                <span>充值用户：</span>
+                <span class="box-flex-1 text-right" id="user">***</span>
+            </li>
+            <li class="flex">    
+                <span>剩余读书币:</span>
+                <span class="box-flex-1 text-right color-red" id="wallet">0</span>
+            </li>
+        </ul>
+    </div>
+    <h3 class="recharge-title"><i class="icon-qianbao1"></i>  请选择充值金额</h3>
+    <!--充值选择第三方-->
+    <div class="mt1rem recharge-select">
+        <ul class="none flex flex-hw">
+            <li class=""  onclick="selectTab()">
+                <input type="radio" name="select-server" id="paypal" class="hidden" data-server="paypal">
+                <label class="flex" for="paypal">
+                    <div class="pay-img paypalzhifu">
+                        <img src="images/paypal.png" style="width: 45px;height: 45px;border-radius: 10px;" alt="paypal">
+                        <!-- <i class="icon-paypalzhifu"></i> -->
+                    </div>
+                    <div class="pay-info box-flex-1">
+                        <h4 class="none name">Paypal支付</h4>
+                        <p class="none bili">1U=600读书币</p>
+                    </div>
+                </label>
+            </li>
+            <li class="" onclick="selectTab()">
+                <input type="radio" name="select-server" id="zfb" class="hidden" checked data-server="alipay" >
+                <label class="flex" for="zfb">
+                    <div class="pay-img zhifubao">
+                        <i class="icon-zhifubaozhifu"></i>
+                    </div>
+                    <div class="pay-info box-flex-1">
+                        <h4 class="none name">支付宝钱包</h4>
+                        <p class="none bili">1元=100读书币</p>
+                    </div>
+                </label>
+            </li>
+            <!-- <li class="">
+                <input type="radio" name="select-server" id="bdqb" class="hidden" data-server="bdqb" >
+                <label class="flex" for="bdqb">
+                    <div class="pay-img baidu">
+                        <i class="icon-baiduqianbao"></i>
+                    </div>
+                    <div class="pay-info box-flex-1">
+                        <h4 class="none name">百度钱包</h4>
+                        <p class="none bili">1元=100读书币</p>
+                    </div>
+                </label>
+            </li> -->
+        </ul>
+    </div>
+    <!--充值金额-->
+    <div class="mt1rem recharge-col recharge-price">
+        <ul class="none flex flex-hw text-center">
+            <li>
+                <input type="radio" name="select-price" id="price1" class="select-price hidden" data-price='1' checked>
+                <label for="price1" class=" flex">1<i class="yuan">元</i></label>
+            </li>
+            <li>
+                <input type="radio" name="select-price" id="price6" class="select-price hidden" data-price='6'>
+                <label for="price6" class=" flex">6<i class="yuan">元</i></label>
+            </li>
+            <li>
+                <input type="radio" name="select-price" id="price50" class="select-price hidden" data-price='50'>
+                <label for="price50" class="flex">50<i class="yuan">元</i></label>
+            </li>
+            <li>
+                <input type="radio" name="select-price" id="price200" class="select-price hidden" data-price='200'>
+                <label for="price200" class="flex">200<i class="yuan">元</i></label>
+            </li>
+            <li>
+                <input type="radio" name="select-price" id="price500" class="select-price hidden" data-price='500'>
+                <label for="price500" class="flex">500<i class="yuan">元</i></label>
+            </li>
+            <li>
+                <input type="radio" name="select-price" id="price1000" class="select-price hidden" data-price='1000'>
+                <label for="price1000" class="flex">1000<i class="yuan">元</i></label>
+            </li>
+        </ul>
+    </div>
+    <!--充值总金额-->
+    <div class="mt1rem recharge-col recharge-all-price-box">
+        <i class="icon-qianbao1"></i>
+        <span>充值金额<b class="recharge-all-price fz2rem">10</b><i class="yuan">元</i></span>
+        <span><b class="read-gold">1000</b>读书币</span>
+    </div>
+    <div class="recharge-col">
+        <a href="javascript:;" class="btn btn-primary btn-block go-to-recharge">确认充值</a>
+    </div>
+    <p class="text-center select-recharge-info">
+         <a href="pay-history.html">查看我的充值记录</a>
+    </p>
+</div>
+  
+<script src="js/jquery.min.js"></script>
+<script src="js/script.js"></script>
+<script src="layui/dist/layui.js"></script>
+<script>
+    function selectTab(){
+        var rate = 100;
+        $(".yuan").text("元");
+        $server = $('.recharge-select').find('input[name="select-server"]:checked'); 
+        if ($server.data('server') == "paypal") {
+            rate = 600;
+            $(".yuan").text("U");
+        } 
+        var $all_price = $('.recharge-all-price'),
+            $read_gold = $('.read-gold');
+        var $price = $('.recharge-price').find('input[name="select-price"]:checked').data('price');    //当前选择充值金额
+            $all_price.text($price);
+            $read_gold.text($price*rate);
+    }
+
+    $(function(){
+    recharge();
+    })
+    $.ajax({
+        url:"/user/info",
+        contentType:"application/json",
+        dataType:"json",
+        type:"GET",
+        success:function (res) {
+            if (res.code == 0) {
+                //res.data.phone
+                $("#user").html(res.data.phone)
+                $("#wallet").html(res.data.coins)
+            }
+        },
+        statusCode: {
+            401: function () {
+                layer.msg('请先登录',{
+                    time: 1000
+                },function(){
+                    window.location.href = "/book/src/login.html";
+                });
+            },
+            402: function () {
+                layer.msg('请先登录',{
+                    time: 1000
+                },function(){
+                    window.location.href = "/book/src/login.html";
+                });
+            },
+        }
+    })
+
+//充值
+function recharge(){
+    var $recharge_price = $('.recharge-price').find("input[name='select-price']");  //价格选择框
+    $recharge_price.on('change',function(){
+        var rate = 100;
+        $(".yuan").text("元");
+        $server = $('.recharge-select').find('input[name="select-server"]:checked').data('server'); 
+        if ($server == "paypal") {
+            rate = 600;
+            $(".yuan").text("U");
+        }
+        var $all_price = $('.recharge-all-price'),
+            $this = $(this),
+            $read_gold = $('.read-gold');
+        var $price = $this.data('price');    //当前选择充值金额
+            $all_price.text($price);
+            $read_gold.text($price*rate);
+    });
+    var timer = null;
+    //充值
+    function go_to_recharge(){
+        $('.go-to-recharge').on('click',function(){
+                if (timer != null) {
+                    clearInterval(timer);
+                }
+                $server = $('.recharge-select').find('input[name="select-server"]:checked').data('server');   //充值方式
+                $price = $recharge_price.filter(':checked').data('price')*100;  //充值金额
+                if($server && $price){
+                    $.ajax({
+                        url:"/charge/create",
+                        data:JSON.stringify({
+                            channel:$server,
+                            amount:$price,
+                            subject:"subject"+$price,
+                            subject_id:1
+                        }),
+                        contentType:"application/json",
+                        dataType:"json",
+                        type:"POST",
+                        success:function(res){
+                            if (res.code == 0) {
+                                if (res.data.channel == "alipay") {
+                                    layer.photos({ 
+                                        photos: {"data": [{"src": 'data:image/gif;base64,'+res.data.qrcode}]},
+                                        anim:1,
+                                        closeBtn:0,
+                                        shade: [0.8, '#393D49']
+                                    });
+                                } else if (res.data.channel == "paypal") {
+                                    // var  newwindow = window.open("","_blank")
+                                    document.location.href = res.data.paypal_url;
+                                }
+                                timer = setInterval(function(){
+                                    $.get("/charge/order?order_id="+res.data.order_id, function (res) {
+                                        if (res.code == 0) {
+                                            window.location.reload();
+                                        }
+                                    });
+                                },1000)
+                            } else {
+                                layer.msg("failure");
+                            }        
+                        },
+                        statusCode: {
+                            401: function () {
+                                layer.msg('请先登录',{
+                                    time: 1000
+                                },function(){
+                                    window.location.href = "/book/src/login.html";
+                                });
+                            },
+                            402: function () {
+                                layer.msg('请先登录',{
+                                    time: 1000
+                                },function(){
+                                    window.location.href = "/book/src/login.html";
+                                });
+                            },
+                        }
+                    })
+                }
+        })
+    }
+    go_to_recharge();
+}
+</script>
+<script src="/book/src/js/tranlate.js"></script>
+</html>
