@@ -1,7 +1,6 @@
 .idea
 .git
 
-.env
 vue-admin/client/node_modules
 .vscode
 runapp
