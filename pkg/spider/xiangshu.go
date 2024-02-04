@@ -1,6 +1,7 @@
 package spider
 
 import (
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"log"
@@ -104,7 +105,17 @@ loop:
 		return
 	}
 	fmt.Println(url)
-	rsp, err := http.Get(url)
+	transport := &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+		},
+	}
+
+	client := &http.Client{
+		Transport: transport,
+		Timeout:   time.Second * 15,
+	}
+	rsp, err := client.Get(url)
 	if err != nil {
 		i++
 		time.Sleep(time.Second)
