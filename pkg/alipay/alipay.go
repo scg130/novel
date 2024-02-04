@@ -19,14 +19,14 @@ type AliPay struct {
 
 var aliPayCli *AliPay
 
-func NewAliPay(appId, rsaPrivateKey, publicKey string) *AliPay {
+func NewAliPay(appId, rsaPrivateKey, publicKey, notifyUrl string) *AliPay {
 	if aliPayCli == nil {
 		client, _ := apay.New(appId, rsaPrivateKey, true)
 		client.LoadAliPayPublicKey(publicKey)
 		return &AliPay{
 			AppId:         appId,
 			RsaPrivateKey: rsaPrivateKey,
-			NotifyUrl:     "http://www.556wan.cn/charge/callback",
+			NotifyUrl:     notifyUrl,
 			PublicKey:     publicKey,
 			Client:        client,
 		}

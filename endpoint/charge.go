@@ -43,7 +43,7 @@ func NewChargeSrv() *Charge {
 				wrappers.NewRateLimitClientWrapper(100),
 				selfwrappers.NewHystrixWrapper(),
 			)),
-			aliPayCli: alipay.NewAliPay(env.AliPayConf.AppId, env.AliPayConf.RsaPrivateKey, env.AliPayConf.RsaPublicKey),
+			aliPayCli: alipay.NewAliPay(env.AliPayConf.AppId, env.AliPayConf.RsaPrivateKey, env.AliPayConf.RsaPublicKey, env.AliPayConf.NotifyUrl),
 			walletCli: go_micro_service_wallet.NewWalletService("go.micro.service.wallet", tools.GetMicroClient(
 				"go.micro.service.wallet",
 				wrappers.NewTracerWrapper(),
