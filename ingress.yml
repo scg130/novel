@@ -22,4 +22,4 @@ spec:
           - path: /
             backend:
               serviceName: micro-runapp-svc
-              servicePort: api
+              servicePort: 8080
