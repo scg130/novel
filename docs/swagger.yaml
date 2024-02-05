@@ -19,7 +19,7 @@ definitions:
       amount:
         type: integer
       channel:
-        description: 充值渠道 alipay 支付宝
+        description: 充值渠道 alipay 支付宝 paypal
         type: string
       subject:
         description: 支付商品 vip 会员 amount 充值金额 chapter 购买章节
@@ -29,7 +29,12 @@ definitions:
     type: object
   dto.CreateOrderRsp:
     properties:
+      channel:
+        description: 充值渠道 alipay 支付宝 paypal
+        type: string
       order_id:
+        type: string
+      paypal_url:
         type: string
       qrcode:
         items:
@@ -49,8 +54,7 @@ definitions:
         type: integer
       cur_page:
         type: integer
-      data:
-        type: object
+      data: {}
       msg:
         type: string
       total:
@@ -64,26 +68,32 @@ definitions:
         type: string
       phone:
         type: integer
+    required:
+    - code
+    - passwd
+    - phone
     type: object
-  go_micro_service_novel.Category:
+  novel_proto_novel.Category:
     properties:
       cate_id:
         type: integer
       channel:
+        type: integer
+      is_show:
         type: integer
       name:
         type: string
       sort:
         type: integer
     type: object
-  go_micro_service_novel.Chapter:
+  novel_proto_novel.Chapter:
     properties:
       chapter_id:
         type: integer
       content:
         type: string
       is_vip:
-        type: integer
+        $ref: '#/definitions/novel_proto_novel.VipType'
       novel_id:
         type: integer
       num:
@@ -93,7 +103,7 @@ definitions:
       words:
         type: integer
     type: object
-  go_micro_service_novel.Note:
+  novel_proto_novel.Note:
     properties:
       new_chapter:
         type: string
@@ -108,12 +118,16 @@ definitions:
       prev_num:
         type: integer
     type: object
-  go_micro_service_novel.Novel:
+  novel_proto_novel.Novel:
     properties:
       author:
         type: string
       cate_id:
         type: integer
+      category_id:
+        type: integer
+      category_name:
+        type: string
       chapter_current:
         type: integer
       chapter_total:
@@ -130,6 +144,8 @@ definitions:
         type: string
       novel_id:
         type: integer
+      sort:
+        type: integer
       un_likes:
         type: integer
       updated_at:
@@ -137,13 +153,31 @@ definitions:
       words:
         type: integer
     type: object
-  go_micro_service_user.UserInfo:
+  novel_proto_novel.VipType:
+    enum:
+    - 0
+    - 1
+    type: integer
+    x-enum-varnames:
+    - VipType_NO_VIP
+    - VipType_IS_VIP
+  novel_proto_user.UserInfo:
     properties:
       phone:
         type: integer
       user_id:
         type: integer
     type: object
+  novel_proto_wallet.Log:
+    properties:
+      amount:
+        type: integer
+      novel_id:
+        type: integer
+      novel_name:
+        type: string
+    type: object
+host: http://www.scg130.cn
 info:
   contact:
     email: scg130@163.com
@@ -219,7 +253,7 @@ paths:
             - $ref: '#/definitions/dto.Resp'
             - properties:
                 data:
-                  $ref: '#/definitions/go_micro_service_user.UserInfo'
+                  $ref: '#/definitions/novel_proto_user.UserInfo'
               type: object
         "500":
           description: 服务异常
@@ -253,6 +287,54 @@ paths:
       summary: 登录
       tags:
       - 用户中心
+  /novel/buy_chapter:
+    get:
+      description: 购买章节
+      parameters:
+      - description: query参数
+        in: query
+        name: chapter_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Resp'
+      summary: 购买章节
+      tags:
+      - novel
+  /novel/buy_logs:
+    get:
+      description: 获取购买历史
+      parameters:
+      - description: query参数
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: query参数
+        in: query
+        name: size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Resp'
+            - properties:
+                data:
+                  $ref: '#/definitions/novel_proto_wallet.Log'
+              type: object
+      summary: 获取购买历史
+      tags:
+      - novel
   /novel/cates:
     get:
       description: 分类列表
@@ -298,7 +380,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/go_micro_service_novel.Category'
+                    $ref: '#/definitions/novel_proto_novel.Category'
                   type: array
               type: object
       summary: 分类列表
@@ -323,7 +405,7 @@ paths:
             - $ref: '#/definitions/dto.Resp'
             - properties:
                 data:
-                  $ref: '#/definitions/go_micro_service_novel.Chapter'
+                  $ref: '#/definitions/novel_proto_novel.Chapter'
               type: object
       summary: 获取章节
       tags:
@@ -373,7 +455,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/go_micro_service_novel.Chapter'
+                    $ref: '#/definitions/novel_proto_novel.Chapter'
                   type: array
               type: object
       summary: 章节列表
@@ -424,7 +506,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/go_micro_service_novel.Note'
+                    $ref: '#/definitions/novel_proto_novel.Note'
                   type: array
               type: object
       summary: 加入书架
@@ -475,10 +557,54 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/go_micro_service_novel.Novel'
+                    $ref: '#/definitions/novel_proto_novel.Novel'
                   type: array
               type: object
       summary: 小说列表
+      tags:
+      - novel
+  /novel/note/del:
+    get:
+      description: 删除阅读记录
+      parameters:
+      - in: query
+        name: cate_id
+        type: integer
+      - in: query
+        name: chapter_id
+        type: integer
+      - in: query
+        name: is_end
+        type: integer
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: novel_id
+        type: integer
+      - in: query
+        name: num
+        type: integer
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: size
+        type: integer
+      - in: query
+        name: type
+        type: string
+      - in: query
+        name: words
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Resp'
+      summary: 删除阅读记录
       tags:
       - novel
   /novel/notes:
@@ -526,7 +652,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/go_micro_service_novel.Note'
+                    $ref: '#/definitions/novel_proto_novel.Note'
                   type: array
               type: object
       summary: 我的书架
@@ -551,7 +677,7 @@ paths:
             - $ref: '#/definitions/dto.Resp'
             - properties:
                 data:
-                  $ref: '#/definitions/go_micro_service_novel.Novel'
+                  $ref: '#/definitions/novel_proto_novel.Novel'
               type: object
       summary: 获取小说详情
       tags:
@@ -601,7 +727,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/go_micro_service_novel.Novel'
+                    $ref: '#/definitions/novel_proto_novel.Novel'
                   type: array
               type: object
       summary: 搜索
@@ -629,6 +755,23 @@ paths:
           schema:
             type: string
       summary: 注册
+      tags:
+      - 用户中心
+  /user_info:
+    post:
+      description: 获取用户信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Resp'
+        "500":
+          description: 服务异常
+          schema:
+            type: string
+      summary: 获取用户信息
       tags:
       - 用户中心
 schemes:

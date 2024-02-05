@@ -5,3 +5,4 @@ vue-admin/client/node_modules
 .vscode
 runapp
 test.go
+docs

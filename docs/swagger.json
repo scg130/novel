@@ -12,6 +12,7 @@
         },
         "version": "1.0"
     },
+    "host": "http://www.scg130.cn",
     "paths": {
         "/admin/login": {
             "post": {
@@ -127,7 +128,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go_micro_service_user.UserInfo"
+                                            "$ref": "#/definitions/novel_proto_user.UserInfo"
                                         }
                                     }
                                 }
@@ -177,6 +178,83 @@
                                     "properties": {
                                         "data": {
                                             "$ref": "#/definitions/dto.LoginResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/novel/buy_chapter": {
+            "get": {
+                "description": "购买章节",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "novel"
+                ],
+                "summary": "购买章节",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "query参数",
+                        "name": "chapter_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Resp"
+                        }
+                    }
+                }
+            }
+        },
+        "/novel/buy_logs": {
+            "get": {
+                "description": "获取购买历史",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "novel"
+                ],
+                "summary": "获取购买历史",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "query参数",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "query参数",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/dto.Resp"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/novel_proto_wallet.Log"
                                         }
                                     }
                                 }
@@ -262,7 +340,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/go_micro_service_novel.Category"
+                                                "$ref": "#/definitions/novel_proto_novel.Category"
                                             }
                                         }
                                     }
@@ -304,7 +382,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go_micro_service_novel.Chapter"
+                                            "$ref": "#/definitions/novel_proto_novel.Chapter"
                                         }
                                     }
                                 }
@@ -390,7 +468,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/go_micro_service_novel.Chapter"
+                                                "$ref": "#/definitions/novel_proto_novel.Chapter"
                                             }
                                         }
                                     }
@@ -477,7 +555,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/go_micro_service_novel.Note"
+                                                "$ref": "#/definitions/novel_proto_novel.Note"
                                             }
                                         }
                                     }
@@ -564,12 +642,84 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/go_micro_service_novel.Novel"
+                                                "$ref": "#/definitions/novel_proto_novel.Novel"
                                             }
                                         }
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            }
+        },
+        "/novel/note/del": {
+            "get": {
+                "description": "删除阅读记录",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "novel"
+                ],
+                "summary": "删除阅读记录",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "name": "cate_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "chapter_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "is_end",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "novel_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "num",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "words",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Resp"
                         }
                     }
                 }
@@ -651,7 +801,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/go_micro_service_novel.Note"
+                                                "$ref": "#/definitions/novel_proto_novel.Note"
                                             }
                                         }
                                     }
@@ -693,7 +843,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/go_micro_service_novel.Novel"
+                                            "$ref": "#/definitions/novel_proto_novel.Novel"
                                         }
                                     }
                                 }
@@ -779,7 +929,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/go_micro_service_novel.Novel"
+                                                "$ref": "#/definitions/novel_proto_novel.Novel"
                                             }
                                         }
                                     }
@@ -811,6 +961,32 @@
                         }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.Resp"
+                        }
+                    },
+                    "500": {
+                        "description": "服务异常",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user_info": {
+            "post": {
+                "description": "获取用户信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户中心"
+                ],
+                "summary": "获取用户信息",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -859,7 +1035,7 @@
                     "type": "integer"
                 },
                 "channel": {
-                    "description": "充值渠道 alipay 支付宝",
+                    "description": "充值渠道 alipay 支付宝 paypal",
                     "type": "string"
                 },
                 "subject": {
@@ -874,7 +1050,14 @@
         "dto.CreateOrderRsp": {
             "type": "object",
             "properties": {
+                "channel": {
+                    "description": "充值渠道 alipay 支付宝 paypal",
+                    "type": "string"
+                },
                 "order_id": {
+                    "type": "string"
+                },
+                "paypal_url": {
                     "type": "string"
                 },
                 "qrcode": {
@@ -905,9 +1088,7 @@
                 "cur_page": {
                     "type": "integer"
                 },
-                "data": {
-                    "type": "object"
-                },
+                "data": {},
                 "msg": {
                     "type": "string"
                 },
@@ -918,6 +1099,11 @@
         },
         "dto.UserRequest": {
             "type": "object",
+            "required": [
+                "code",
+                "passwd",
+                "phone"
+            ],
             "properties": {
                 "code": {
                     "type": "string"
@@ -930,13 +1116,16 @@
                 }
             }
         },
-        "go_micro_service_novel.Category": {
+        "novel_proto_novel.Category": {
             "type": "object",
             "properties": {
                 "cate_id": {
                     "type": "integer"
                 },
                 "channel": {
+                    "type": "integer"
+                },
+                "is_show": {
                     "type": "integer"
                 },
                 "name": {
@@ -947,7 +1136,7 @@
                 }
             }
         },
-        "go_micro_service_novel.Chapter": {
+        "novel_proto_novel.Chapter": {
             "type": "object",
             "properties": {
                 "chapter_id": {
@@ -957,7 +1146,7 @@
                     "type": "string"
                 },
                 "is_vip": {
-                    "type": "integer"
+                    "$ref": "#/definitions/novel_proto_novel.VipType"
                 },
                 "novel_id": {
                     "type": "integer"
@@ -973,7 +1162,7 @@
                 }
             }
         },
-        "go_micro_service_novel.Note": {
+        "novel_proto_novel.Note": {
             "type": "object",
             "properties": {
                 "new_chapter": {
@@ -996,7 +1185,7 @@
                 }
             }
         },
-        "go_micro_service_novel.Novel": {
+        "novel_proto_novel.Novel": {
             "type": "object",
             "properties": {
                 "author": {
@@ -1004,6 +1193,12 @@
                 },
                 "cate_id": {
                     "type": "integer"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "category_name": {
+                    "type": "string"
                 },
                 "chapter_current": {
                     "type": "integer"
@@ -1029,6 +1224,9 @@
                 "novel_id": {
                     "type": "integer"
                 },
+                "sort": {
+                    "type": "integer"
+                },
                 "un_likes": {
                     "type": "integer"
                 },
@@ -1040,7 +1238,18 @@
                 }
             }
         },
-        "go_micro_service_user.UserInfo": {
+        "novel_proto_novel.VipType": {
+            "type": "integer",
+            "enum": [
+                0,
+                1
+            ],
+            "x-enum-varnames": [
+                "VipType_NO_VIP",
+                "VipType_IS_VIP"
+            ]
+        },
+        "novel_proto_user.UserInfo": {
             "type": "object",
             "properties": {
                 "phone": {
@@ -1048,6 +1257,20 @@
                 },
                 "user_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "novel_proto_wallet.Log": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "novel_id": {
+                    "type": "integer"
+                },
+                "novel_name": {
+                    "type": "string"
                 }
             }
         }

@@ -450,7 +450,7 @@ func (n *Novel) BuyLogs(ctx *gin.Context) {
 // @Produce json
 // @Param chapter_id query int true "query参数"
 // @Success 200 {object}  dto.Resp{}
-// @Router /novel/buy_chapter?chapter_id=1 [get]
+// @Router /novel/buy_chapter [get]
 func (self *Novel) BuyChapter(ctx *gin.Context) {
 	var req dto.BuyRequest
 	if err := ctx.BindQuery(&req); err != nil {
