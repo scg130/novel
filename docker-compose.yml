@@ -55,7 +55,7 @@ services:
       hx_net:
         ipv4_address: 172.22.0.5
 
-  #http://127.0.0.1:7777/hystrix   http://10.100.24.78:81/hystrix.stream  防火墙 81 7777端口打开
+  #http://192.168.1.130:7777/hystrix   http://192.168.1.130:81/hystrix.stream  防火墙 81 7777端口打开
   hystrix:
     container_name: hystrix
     image: scg130/hystrix
