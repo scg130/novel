@@ -1,13 +1,13 @@
 package router
 
 import (
+	swaggerFiles "github.com/swaggo/files"
 	"net/http"
 	"novel/endpoint"
 	"novel/middleware"
 
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
 
 	_ "novel/docs"
 
