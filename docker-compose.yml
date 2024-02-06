@@ -1,5 +1,7 @@
 version: "3.5"
 #ip=`ifconfig | grep 192 | grep -v grep | awk '{print $2}'`
+#TRACER_HOST = ip
+#TRACER_PORT = 6831
 services:
   etcd:
     container_name: etcd
