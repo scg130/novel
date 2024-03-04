@@ -121,7 +121,10 @@ func (self *Charge) CreateOrder(ctx *gin.Context) {
 		res := self.aliPayCli.CreateOrder(tradeOrderId, fmt.Sprintf("%.2f", float64(req.Amount)/100.00), subject)
 		//qrcode.WriteFile(qrcodeStr.(string),qrcode.Medium,256,"./qr.png")
 		if res == nil {
-			ctx.JSON(http.StatusOK, nil)
+			ctx.JSON(http.StatusOK, dto.Resp{
+				Code: -1,
+				Msg:  err.Error(),
+			})
 			return
 		}
 		thirdOrderNo = res.OutTradeOrder
@@ -129,7 +132,10 @@ func (self *Charge) CreateOrder(ctx *gin.Context) {
 	} else if req.Channel == "paypal" {
 		thirdOrderNo, paypalUrl, err = self.paypalCli.Create(ctx, fmt.Sprintf("%.2f", float64(req.Amount)/100.00))
 		if err != nil {
-			ctx.JSON(http.StatusOK, nil)
+			ctx.JSON(http.StatusOK, dto.Resp{
+				Code: -1,
+				Msg:  err.Error(),
+			})
 			return
 		}
 	}
