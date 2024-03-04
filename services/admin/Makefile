@@ -5,7 +5,7 @@ MODIFY=Mproto/imports/api.proto=github.com/micro/go-micro/v2/api/proto
 .PHONY: proto
 proto:
     
-	protoc -I=${GOPATH}/src  --proto_path=. --micro_out=${MODIFY}:. --gofast_out=${MODIFY}:.  proto/admin/user.proto
+	protoc -I=${GOPATH}/src  --proto_path=../../ --micro_out=${MODIFY}:. --gofast_out=${MODIFY}:.  proto/admin/admin.proto
 
 
 .PHONY: build
