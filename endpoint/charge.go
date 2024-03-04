@@ -106,12 +106,8 @@ func (self *Charge) CreateOrder(ctx *gin.Context) {
 		ctx.String(http.StatusBadRequest, "bad params")
 		return
 	}
-	authData, isExist := ctx.Get("authData")
-	if !isExist {
-		ctx.String(http.StatusUnauthorized, "failure")
-		return
-	}
-	userInfo := authData.(map[string]interface{})
+
+	userInfo := GetUserInfo(ctx)
 	subject := fmt.Sprintf("%d-%s", req.Amount, req.Subject)
 	tradeOrderId := self.generateOrderNo()
 	thirdOrderNo := ""
@@ -142,7 +138,7 @@ func (self *Charge) CreateOrder(ctx *gin.Context) {
 
 	//创建订单
 	rep, err := self.chargeCli.Create(ctx, &go_micro_service_charge.ChargeReq{
-		Uid:          int64(userInfo["user_id"].(float64)),
+		Uid:          userInfo.UserId,
 		Amount:       req.Amount,
 		Channel:      req.Channel,
 		Subject:      subject,
