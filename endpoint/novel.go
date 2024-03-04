@@ -1,7 +1,6 @@
 package endpoint
 
 import (
-	"fmt"
 	"net/http"
 	"novel/dto"
 	go_micro_service_novel "novel/proto/novel"
@@ -70,7 +69,6 @@ func (n *Novel) Index(ctx *gin.Context) {
 		go func(req dto.NovelListReq) {
 			defer wg.Done()
 			resp, err := n.novelCli.GetNovelsByCateId(ctx, &go_micro_service_novel.Request{CateId: req.CateId, Page: req.Page, Size_: req.Size})
-			fmt.Println(resp, err)
 			if err != nil || resp.Code != 0 {
 				return
 			}

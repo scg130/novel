@@ -118,9 +118,9 @@ func (self *Charge) CreateOrder(ctx *gin.Context) {
 	paypalUrl := ""
 	var imgData []byte
 	if req.Channel == "alipay" {
-		res := self.aliPayCli.CreateOrder(tradeOrderId, fmt.Sprintf("%.2f", float64(req.Amount)/100.00), subject)
+		res, err := self.aliPayCli.CreateOrder(tradeOrderId, fmt.Sprintf("%.2f", float64(req.Amount)/100.00), subject)
 		//qrcode.WriteFile(qrcodeStr.(string),qrcode.Medium,256,"./qr.png")
-		if res == nil {
+		if err != nil {
 			ctx.JSON(http.StatusOK, dto.Resp{
 				Code: -1,
 				Msg:  err.Error(),
