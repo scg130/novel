@@ -1,6 +1,7 @@
 version: "3.5"
 #ip=`ifconfig | grep 192 | grep -v grep | awk '{print $2}'`
 services:
+#  docker run -d --name etcd -e ALLOW_NONE_AUTHENTICATION=yes -e ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379 -p 32379:2379  -p 32380:2380 bitnami/etcd
   etcd:
     container_name: etcd
     image: "bitnami/etcd:latest"

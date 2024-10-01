@@ -23,7 +23,7 @@ type Novel struct {
 	UpdateTime     time.Time `xorm:"updated_at not null  DEFAULT CURRENT_TIMESTAMP  timestamp" json:"update_time"`
 	CreateTime     time.Time `xorm:"created_at not null DEFAULT CURRENT_TIMESTAMP timestamp" json:"create_time"`
 
-	NewChapter string `xorm:"not null  comment('分类名称') VARCHAR(255)" json:"new_chapter"`
+	NewChapter string `xorm:"-" json:"new_chapter"`
 	Category   string `json:"category" xorm:"-"`
 }
 

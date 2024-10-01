@@ -73,7 +73,7 @@ definitions:
     - passwd
     - phone
     type: object
-  novel_proto_novel.Category:
+  go_micro_service_novel.Category:
     properties:
       cate_id:
         type: integer
@@ -86,14 +86,14 @@ definitions:
       sort:
         type: integer
     type: object
-  novel_proto_novel.Chapter:
+  go_micro_service_novel.Chapter:
     properties:
       chapter_id:
         type: integer
       content:
         type: string
       is_vip:
-        $ref: '#/definitions/novel_proto_novel.VipType'
+        type: integer
       novel_id:
         type: integer
       num:
@@ -103,7 +103,7 @@ definitions:
       words:
         type: integer
     type: object
-  novel_proto_novel.Note:
+  go_micro_service_novel.Note:
     properties:
       new_chapter:
         type: string
@@ -118,7 +118,7 @@ definitions:
       prev_num:
         type: integer
     type: object
-  novel_proto_novel.Novel:
+  go_micro_service_novel.Novel:
     properties:
       author:
         type: string
@@ -153,22 +153,14 @@ definitions:
       words:
         type: integer
     type: object
-  novel_proto_novel.VipType:
-    enum:
-    - 0
-    - 1
-    type: integer
-    x-enum-varnames:
-    - VipType_NO_VIP
-    - VipType_IS_VIP
-  novel_proto_user.UserInfo:
+  go_micro_service_user.UserInfo:
     properties:
       phone:
         type: integer
       user_id:
         type: integer
     type: object
-  novel_proto_wallet.Log:
+  go_micro_srv_charge.Log:
     properties:
       amount:
         type: integer
@@ -253,7 +245,7 @@ paths:
             - $ref: '#/definitions/dto.Resp'
             - properties:
                 data:
-                  $ref: '#/definitions/novel_proto_user.UserInfo'
+                  $ref: '#/definitions/go_micro_service_user.UserInfo'
               type: object
         "500":
           description: 服务异常
@@ -330,7 +322,7 @@ paths:
             - $ref: '#/definitions/dto.Resp'
             - properties:
                 data:
-                  $ref: '#/definitions/novel_proto_wallet.Log'
+                  $ref: '#/definitions/go_micro_srv_charge.Log'
               type: object
       summary: 获取购买历史
       tags:
@@ -380,7 +372,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/novel_proto_novel.Category'
+                    $ref: '#/definitions/go_micro_service_novel.Category'
                   type: array
               type: object
       summary: 分类列表
@@ -405,7 +397,7 @@ paths:
             - $ref: '#/definitions/dto.Resp'
             - properties:
                 data:
-                  $ref: '#/definitions/novel_proto_novel.Chapter'
+                  $ref: '#/definitions/go_micro_service_novel.Chapter'
               type: object
       summary: 获取章节
       tags:
@@ -455,7 +447,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/novel_proto_novel.Chapter'
+                    $ref: '#/definitions/go_micro_service_novel.Chapter'
                   type: array
               type: object
       summary: 章节列表
@@ -506,7 +498,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/novel_proto_novel.Note'
+                    $ref: '#/definitions/go_micro_service_novel.Note'
                   type: array
               type: object
       summary: 加入书架
@@ -557,7 +549,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/novel_proto_novel.Novel'
+                    $ref: '#/definitions/go_micro_service_novel.Novel'
                   type: array
               type: object
       summary: 小说列表
@@ -652,7 +644,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/novel_proto_novel.Note'
+                    $ref: '#/definitions/go_micro_service_novel.Note'
                   type: array
               type: object
       summary: 我的书架
@@ -677,7 +669,7 @@ paths:
             - $ref: '#/definitions/dto.Resp'
             - properties:
                 data:
-                  $ref: '#/definitions/novel_proto_novel.Novel'
+                  $ref: '#/definitions/go_micro_service_novel.Novel'
               type: object
       summary: 获取小说详情
       tags:
@@ -727,7 +719,7 @@ paths:
             - properties:
                 data:
                   items:
-                    $ref: '#/definitions/novel_proto_novel.Novel'
+                    $ref: '#/definitions/go_micro_service_novel.Novel'
                   type: array
               type: object
       summary: 搜索

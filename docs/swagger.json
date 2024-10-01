@@ -128,7 +128,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/novel_proto_user.UserInfo"
+                                            "$ref": "#/definitions/go_micro_service_user.UserInfo"
                                         }
                                     }
                                 }
@@ -254,7 +254,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/novel_proto_wallet.Log"
+                                            "$ref": "#/definitions/go_micro_srv_charge.Log"
                                         }
                                     }
                                 }
@@ -340,7 +340,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/novel_proto_novel.Category"
+                                                "$ref": "#/definitions/go_micro_service_novel.Category"
                                             }
                                         }
                                     }
@@ -382,7 +382,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/novel_proto_novel.Chapter"
+                                            "$ref": "#/definitions/go_micro_service_novel.Chapter"
                                         }
                                     }
                                 }
@@ -468,7 +468,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/novel_proto_novel.Chapter"
+                                                "$ref": "#/definitions/go_micro_service_novel.Chapter"
                                             }
                                         }
                                     }
@@ -555,7 +555,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/novel_proto_novel.Note"
+                                                "$ref": "#/definitions/go_micro_service_novel.Note"
                                             }
                                         }
                                     }
@@ -642,7 +642,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/novel_proto_novel.Novel"
+                                                "$ref": "#/definitions/go_micro_service_novel.Novel"
                                             }
                                         }
                                     }
@@ -801,7 +801,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/novel_proto_novel.Note"
+                                                "$ref": "#/definitions/go_micro_service_novel.Note"
                                             }
                                         }
                                     }
@@ -843,7 +843,7 @@
                                     "type": "object",
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/definitions/novel_proto_novel.Novel"
+                                            "$ref": "#/definitions/go_micro_service_novel.Novel"
                                         }
                                     }
                                 }
@@ -929,7 +929,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/definitions/novel_proto_novel.Novel"
+                                                "$ref": "#/definitions/go_micro_service_novel.Novel"
                                             }
                                         }
                                     }
@@ -1116,7 +1116,7 @@
                 }
             }
         },
-        "novel_proto_novel.Category": {
+        "go_micro_service_novel.Category": {
             "type": "object",
             "properties": {
                 "cate_id": {
@@ -1136,7 +1136,7 @@
                 }
             }
         },
-        "novel_proto_novel.Chapter": {
+        "go_micro_service_novel.Chapter": {
             "type": "object",
             "properties": {
                 "chapter_id": {
@@ -1146,7 +1146,7 @@
                     "type": "string"
                 },
                 "is_vip": {
-                    "$ref": "#/definitions/novel_proto_novel.VipType"
+                    "type": "integer"
                 },
                 "novel_id": {
                     "type": "integer"
@@ -1162,7 +1162,7 @@
                 }
             }
         },
-        "novel_proto_novel.Note": {
+        "go_micro_service_novel.Note": {
             "type": "object",
             "properties": {
                 "new_chapter": {
@@ -1185,7 +1185,7 @@
                 }
             }
         },
-        "novel_proto_novel.Novel": {
+        "go_micro_service_novel.Novel": {
             "type": "object",
             "properties": {
                 "author": {
@@ -1238,18 +1238,7 @@
                 }
             }
         },
-        "novel_proto_novel.VipType": {
-            "type": "integer",
-            "enum": [
-                0,
-                1
-            ],
-            "x-enum-varnames": [
-                "VipType_NO_VIP",
-                "VipType_IS_VIP"
-            ]
-        },
-        "novel_proto_user.UserInfo": {
+        "go_micro_service_user.UserInfo": {
             "type": "object",
             "properties": {
                 "phone": {
@@ -1260,7 +1249,7 @@
                 }
             }
         },
-        "novel_proto_wallet.Log": {
+        "go_micro_srv_charge.Log": {
             "type": "object",
             "properties": {
                 "amount": {

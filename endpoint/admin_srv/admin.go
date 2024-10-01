@@ -1,6 +1,7 @@
 package admin_srv
 
 import (
+	"fmt"
 	"net/http"
 	"novel/dto/admin"
 	"novel/env"
@@ -100,7 +101,7 @@ func (u *Admin) Login(ctx *gin.Context) {
 		paths = append(paths, menu.Path)
 		apis = append(apis, menu.Api)
 	}
-
+	fmt.Println(resp.Data)
 	token, err := tools.GenerateToken(env.JwtConf.AdminJwtSecret, map[string]interface{}{
 		"udata": resp.Data,
 		"paths": paths,
