@@ -1,6 +1,7 @@
 package alipay
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -34,7 +35,7 @@ func NewAliPay(appId, rsaPrivateKey, publicKey, notifyUrl string) *AliPay {
 	return aliPayCli
 }
 
-func (self *AliPay) CreateOrder(orderNo, amount, subject string) (resp *CreateResp) {
+func (self *AliPay) CreateOrder(orderNo, amount, subject string) (resp *CreateResp, err error) {
 	p := apay.TradePreCreate{}
 	p.TotalAmount = amount
 	p.OutTradeNo = orderNo
@@ -43,16 +44,17 @@ func (self *AliPay) CreateOrder(orderNo, amount, subject string) (resp *CreateRe
 	res, err := self.Client.TradePreCreate(p)
 	if err != nil {
 		log.Println(err.Error())
-		return nil
+		return
 	}
 	if res.IsSuccess() {
 		return &CreateResp{
 			OutTradeOrder: res.Content.OutTradeNo,
 			Qrcode:        res.Content.QRCode,
-		}
+		}, nil
 	}
 	log.Println(res.Content)
-	return nil
+
+	return nil, errors.New(res.Content.Msg + res.Content.SubMsg)
 }
 
 func (self *AliPay) Query(outTradeNo string) {

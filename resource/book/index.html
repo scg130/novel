@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/book/src/fonts/iconfont.css" />
     <link rel="stylesheet" href="/book/src/css/style.min.css" />
     <link rel="stylesheet" href="/book/src/css/swiper.min.css" />
+    <link rel="stylesheet" href="/book/src/css/tranlate.css" />
     <script src="/book/src/js/loading.js"></script>
     <style>
       .scroll {
@@ -178,7 +179,7 @@
     $("#more-chapter").on("click", function(){
       $("#more-btn").attr("disabled", "disabled");
       $.ajax({
-      url: "http://www.556wan.cn/novel/index",
+      url: "/novel/index",
       type:"POST",
       contentType: "application/json",
       dataType: "json",
@@ -215,7 +216,7 @@
     });
     })
     $.ajax({
-      url: "http://www.556wan.cn/novel/index",
+      url: "/novel/index",
       type:"POST",
       contentType: "application/json",
       dataType: "json",

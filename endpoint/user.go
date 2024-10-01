@@ -218,18 +218,9 @@ func (u *User) Find(ctx *gin.Context) {
 // @Failure 500 {string} string "服务异常"
 // @Router /user_info [post]
 func (u *User) UserInfo(ctx *gin.Context) {
-	authData, isExist := ctx.Get("authData")
-	if !isExist {
-		ctx.JSON(http.StatusUnauthorized, dto.Resp{
-			Code: -1,
-			Msg:  "get failure",
-		})
-		return
-	}
-
-	userInfo := authData.(map[string]interface{})
+	userInfo := GetUserInfo(ctx)
 	wallet, err := u.WalletCli.GetOne(ctx, &go_micro_service_wallet.WalletReq{
-		Uid: int64(userInfo["user_id"].(float64)),
+		Uid: userInfo.UserId,
 	})
 	if err != nil {
 		ctx.JSON(http.StatusOK, dto.Resp{
@@ -238,10 +229,13 @@ func (u *User) UserInfo(ctx *gin.Context) {
 		})
 		return
 	}
-	userInfo["coins"] = wallet.AvailableBalance
+	info := make(map[string]interface{})
+	info["coins"] = wallet.AvailableBalance
+	info["user_id"] = userInfo.UserId
+	info["phone"] = userInfo.Phone
 	ctx.JSON(http.StatusOK, dto.Resp{
 		Code: 0,
 		Msg:  "ok",
-		Data: userInfo,
+		Data: info,
 	})
 }

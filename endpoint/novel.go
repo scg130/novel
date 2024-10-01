@@ -1,7 +1,6 @@
 package endpoint
 
 import (
-	"fmt"
 	"net/http"
 	"novel/dto"
 	go_micro_service_novel "novel/proto/novel"
@@ -70,7 +69,6 @@ func (n *Novel) Index(ctx *gin.Context) {
 		go func(req dto.NovelListReq) {
 			defer wg.Done()
 			resp, err := n.novelCli.GetNovelsByCateId(ctx, &go_micro_service_novel.Request{CateId: req.CateId, Page: req.Page, Size_: req.Size})
-			fmt.Println(resp, err)
 			if err != nil || resp.Code != 0 {
 				return
 			}
@@ -326,15 +324,10 @@ func (n *Novel) Chapter(ctx *gin.Context) {
 		ctx.String(http.StatusBadRequest, "bad params")
 		return
 	}
-	authData, isExist := ctx.Get("authData")
-	if !isExist {
-		ctx.String(http.StatusUnauthorized, "failure")
-		return
-	}
 
-	userInfo := authData.(map[string]interface{})
+	userInfo := GetUserInfo(ctx)
 
-	resp, err := n.novelCli.GetChapterById(ctx, &go_micro_service_novel.Request{NovelId: req.NovelId, Num: req.Num, UserId: int32(userInfo["user_id"].(float64))})
+	resp, err := n.novelCli.GetChapterById(ctx, &go_micro_service_novel.Request{NovelId: req.NovelId, Num: req.Num, UserId: int32(userInfo.UserId)})
 	if err != nil || resp.Code != 0 || resp.Chapter == nil {
 		ctx.JSON(http.StatusOK, dto.Resp{
 			Code: -1,
@@ -344,7 +337,7 @@ func (n *Novel) Chapter(ctx *gin.Context) {
 	}
 	if resp.Chapter.IsVip == go_micro_service_novel.VipType_IS_VIP {
 		rsp, err := n.walletCli.GetChapter(ctx, &go_micro_service_wallet.BuyChapterRequest{
-			Uid:       int64(userInfo["user_id"].(float64)),
+			Uid:       userInfo.UserId,
 			ChapterId: int64(resp.Chapter.ChapterId),
 		})
 		if err != nil {
@@ -416,16 +409,11 @@ func (n *Novel) BuyLogs(ctx *gin.Context) {
 		ctx.String(http.StatusBadRequest, "bad params")
 		return
 	}
-	authData, isExist := ctx.Get("authData")
-	if !isExist {
-		ctx.String(http.StatusUnauthorized, "failure")
-		return
-	}
 
-	userInfo := authData.(map[string]interface{})
+	userInfo := GetUserInfo(ctx)
 
 	resp, err := n.walletCli.FindBuyLog(ctx, &go_micro_service_wallet.LogRequest{
-		Uid:   int64(userInfo["user_id"].(float64)),
+		Uid:   userInfo.UserId,
 		Page:  req.Page,
 		Size_: req.Size,
 	})
@@ -457,13 +445,8 @@ func (self *Novel) BuyChapter(ctx *gin.Context) {
 		ctx.String(http.StatusBadRequest, "bad params")
 		return
 	}
-	authData, isExist := ctx.Get("authData")
-	if !isExist {
-		ctx.String(http.StatusUnauthorized, "failure")
-		return
-	}
 
-	userInfo := authData.(map[string]interface{})
+	userInfo := GetUserInfo(ctx)
 
 	chapter, err := self.novelCli.GetChapterById(ctx, &go_micro_service_novel.Request{
 		NovelId: req.NovelId,
@@ -487,7 +470,7 @@ func (self *Novel) BuyChapter(ctx *gin.Context) {
 		return
 	}
 	wRsp, err := self.walletCli.GetOne(ctx, &go_micro_service_wallet.WalletReq{
-		Uid: int64(userInfo["user_id"].(float64)),
+		Uid: userInfo.UserId,
 	})
 	if err != nil || wRsp.AvailableBalance < 100 {
 		ctx.JSON(http.StatusOK, dto.Resp{
@@ -497,7 +480,7 @@ func (self *Novel) BuyChapter(ctx *gin.Context) {
 		return
 	}
 	resp, err := self.walletCli.BuyChapter(ctx, &go_micro_service_wallet.BuyChapterRequest{
-		Uid:       int64(userInfo["user_id"].(float64)),
+		Uid:       userInfo.UserId,
 		ChapterId: req.ChapterId,
 		NovelId:   int64(novel.Novel.NovelId),
 		NovelName: novel.Novel.Name,
@@ -511,7 +494,7 @@ func (self *Novel) BuyChapter(ctx *gin.Context) {
 		return
 	}
 	changeRep, err := self.walletCli.Change(ctx, &go_micro_service_wallet.WalletReq{
-		Uid:    int64(userInfo["user_id"].(float64)),
+		Uid:    userInfo.UserId,
 		Amount: 100,
 		Type:   go_micro_service_wallet.Type_STATE_BUY_CHAPTER,
 	})

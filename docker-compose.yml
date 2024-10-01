@@ -1,5 +1,7 @@
 version: "3.5"
 #ip=`ifconfig | grep 192 | grep -v grep | awk '{print $2}'`
+#TRACER_HOST = ip
+#TRACER_PORT = 6831
 services:
 #  docker run -d --name etcd -e ALLOW_NONE_AUTHENTICATION=yes -e ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379 -p 32379:2379  -p 32380:2380 bitnami/etcd
   etcd:
@@ -56,7 +58,7 @@ services:
       hx_net:
         ipv4_address: 172.22.0.5
 
-  #http://127.0.0.1:7777/hystrix   http://10.100.24.78:81/hystrix.stream  防火墙 81 7777端口打开
+  #http://192.168.1.130:7777/hystrix   http://192.168.1.130:81/hystrix.stream  防火墙 81 7777端口打开
   hystrix:
     container_name: hystrix
     image: scg130/hystrix

@@ -106,22 +106,21 @@ func (self *Charge) CreateOrder(ctx *gin.Context) {
 		ctx.String(http.StatusBadRequest, "bad params")
 		return
 	}
-	authData, isExist := ctx.Get("authData")
-	if !isExist {
-		ctx.String(http.StatusUnauthorized, "failure")
-		return
-	}
-	userInfo := authData.(map[string]interface{})
+
+	userInfo := GetUserInfo(ctx)
 	subject := fmt.Sprintf("%d-%s", req.Amount, req.Subject)
 	tradeOrderId := self.generateOrderNo()
 	thirdOrderNo := ""
 	paypalUrl := ""
 	var imgData []byte
 	if req.Channel == "alipay" {
-		res := self.aliPayCli.CreateOrder(tradeOrderId, fmt.Sprintf("%.2f", float64(req.Amount)/100.00), subject)
+		res, err := self.aliPayCli.CreateOrder(tradeOrderId, fmt.Sprintf("%.2f", float64(req.Amount)/100.00), subject)
 		//qrcode.WriteFile(qrcodeStr.(string),qrcode.Medium,256,"./qr.png")
-		if res == nil {
-			ctx.JSON(http.StatusOK, nil)
+		if err != nil {
+			ctx.JSON(http.StatusOK, dto.Resp{
+				Code: -1,
+				Msg:  err.Error(),
+			})
 			return
 		}
 		thirdOrderNo = res.OutTradeOrder
@@ -129,14 +128,17 @@ func (self *Charge) CreateOrder(ctx *gin.Context) {
 	} else if req.Channel == "paypal" {
 		thirdOrderNo, paypalUrl, err = self.paypalCli.Create(ctx, fmt.Sprintf("%.2f", float64(req.Amount)/100.00))
 		if err != nil {
-			ctx.JSON(http.StatusOK, nil)
+			ctx.JSON(http.StatusOK, dto.Resp{
+				Code: -1,
+				Msg:  err.Error(),
+			})
 			return
 		}
 	}
 
 	//创建订单
 	rep, err := self.chargeCli.Create(ctx, &go_micro_service_charge.ChargeReq{
-		Uid:          int64(userInfo["user_id"].(float64)),
+		Uid:          userInfo.UserId,
 		Amount:       req.Amount,
 		Channel:      req.Channel,
 		Subject:      subject,

@@ -21,3 +21,8 @@ type Captcha struct {
 	Id   string `json:"id" form:"id" binding:"required"`
 	Code string `json:"code" form:"code" binding:"required"`
 }
+
+type UserInfo struct {
+	UserId int64
+	Phone  int64
+}
